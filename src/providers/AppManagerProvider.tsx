@@ -81,13 +81,13 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         newSet.delete(activeApp);
         return newSet;
       });
-      router.push('/'); // Navigate to a base/desktop page
+      router.push('/desktop'); // Navigate to a base/desktop page
     }
   };
 
   const minimizeApp = (id: AppID) => {
     if (activeApp === id) {
-      router.push('/'); // Navigate away to "close" the window
+      router.push('/desktop'); // Navigate away to "close" the window
     }
     setMinimizedApps(prev => new Set(prev).add(id));
   };
