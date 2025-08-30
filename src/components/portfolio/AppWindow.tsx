@@ -9,18 +9,20 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import type { AppID } from '@/lib/apps';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useRouter } from 'next/navigation';
+import { useAppManager } from '@/hooks/useAppManager';
 
 interface AppWindowProps {
   appId: AppID | null;
   title: string;
-  onClose: () => void;
-  onMinimize: (id: AppID) => void;
   children: ReactNode;
 }
 
 type WindowState = 'default' | 'maximized';
 
-export default function AppWindow({ appId, title, onClose, onMinimize, children }: AppWindowProps) {
+export default function AppWindow({ appId, title, children }: AppWindowProps) {
+  const router = useRouter();
+  const { minimizeApp } = useAppManager();
   const isTerminal = appId === 'profile';
   const [windowState, setWindowState] = useState<WindowState>('default');
   const isMobile = useIsMobile();
@@ -30,13 +32,17 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
     setWindowState('default');
   }, [appId]);
 
+  const handleClose = () => {
+    router.push('/');
+  }
+
   const handleMaximize = () => {
     setWindowState(current => (current === 'maximized' ? 'default' : 'maximized'));
   };
   
   const handleMinimize = () => {
     if(appId) {
-      onMinimize(appId);
+      minimizeApp(appId);
     }
   };
 
@@ -57,7 +63,8 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
         windowState === 'maximized' || isMobile ? 'p-0' : 'p-4 md:p-8',
         !isTerminal ? '' : 'bg-black/30 backdrop-blur-sm'
       )}
-      onClick={onClose}
+      // Click-away to close is disabled in routing mode, as the background is always present.
+      // onClick={handleClose}
     >
       <Card
         className={cn(
@@ -97,7 +104,7 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
               variant="ghost"
               size="icon"
               className="size-6 rounded-full bg-red-500 hover:bg-red-600"
-              onClick={onClose}
+              onClick={handleClose}
             >
               <X className="size-4 text-white" />
             </Button>

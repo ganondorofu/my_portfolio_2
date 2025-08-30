@@ -2,22 +2,30 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { apps as appConfig, type AppID } from '@/lib/apps.tsx';
+import { useParams, useRouter } from 'next/navigation';
 
 export function useAppManager() {
-  const [activeApp, setActiveApp] = useState<AppID | null>(null);
+  const router = useRouter();
+  const params = useParams();
+  
+  const activeApp = useMemo(() => {
+    const appId = params.appId;
+    return (appId && typeof appId === 'string' && appConfig[appId as AppID]) ? appId as AppID : null;
+  }, [params.appId]);
+  
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [minimizedApps, setMinimizedApps] = useState<Set<AppID>>(new Set());
 
-  useEffect(() => {
-    // Open the profile app by default once logged in, with a delay
-    if (isLoggedIn) {
-      const timer = setTimeout(() => {
-        setActiveApp('profile');
-      }, 500); // 500ms delay
-      return () => clearTimeout(timer); // Cleanup timer on unmount
-    }
-  }, [isLoggedIn]);
+  // This effect is now handled in the root page.tsx
+  // useEffect(() => {
+  //   if (isLoggedIn && !activeApp) {
+  //     const timer = setTimeout(() => {
+  //       router.push('/profile');
+  //     }, 500); 
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [isLoggedIn, activeApp, router]);
 
   const apps = useMemo(() => appConfig, []);
   
@@ -37,7 +45,7 @@ export function useAppManager() {
     if (app.externalUrl) {
       window.open(app.externalUrl, '_blank');
     } else {
-      setActiveApp(id);
+      router.push(`/${id}`);
       setMinimizedApps(prev => {
         const newSet = new Set(prev);
         newSet.delete(id);
@@ -54,12 +62,14 @@ export function useAppManager() {
         newSet.delete(activeApp);
         return newSet;
       });
-      setActiveApp(null);
+      router.push('/'); // Navigate to a base/desktop page
     }
   };
   
   const minimizeApp = (id: AppID) => {
-    setActiveApp(null);
+    if (activeApp === id) {
+      router.push('/'); // Navigate away to "close" the window
+    }
     setMinimizedApps(prev => new Set(prev).add(id));
   };
 
@@ -67,14 +77,14 @@ export function useAppManager() {
     setIsLoggedIn(true);
   };
   
-  // Prevent scrolling when app windows or drawers are open
+  // Prevent scrolling when drawers are open
   useEffect(() => {
-    if (activeApp || isDrawerOpen) {
+    if (isDrawerOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
-  }, [activeApp, isDrawerOpen]);
+  }, [isDrawerOpen]);
 
   return {
     activeApp,

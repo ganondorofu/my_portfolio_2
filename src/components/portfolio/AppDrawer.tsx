@@ -1,21 +1,36 @@
 import type { ReactNode } from 'react';
 import type { AppID } from '@/lib/apps';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { useAppManager } from '@/hooks/useAppManager';
 
 interface DrawerApp {
   id: AppID;
   title: string;
   icon: ReactNode;
+  externalUrl?: string;
 }
 
 interface AppDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   apps: DrawerApp[];
-  onAppClick: (id: AppID) => void;
 }
 
-export default function AppDrawer({ isOpen, onClose, apps, onAppClick }: AppDrawerProps) {
+export default function AppDrawer({ isOpen, onClose, apps }: AppDrawerProps) {
+  const { openApp } = useAppManager();
   if (!isOpen) return null;
+
+  const handleAppClick = (app: DrawerApp) => {
+    if (app.externalUrl) {
+      window.open(app.externalUrl, '_blank');
+      onClose();
+    } else {
+      // The Link component will handle navigation,
+      // so we just need to close the drawer.
+      onClose();
+    }
+  };
 
   return (
     <div
@@ -24,20 +39,34 @@ export default function AppDrawer({ isOpen, onClose, apps, onAppClick }: AppDraw
     >
       <div className="flex-1 p-8 pt-20 md:p-16">
         <div className="grid grid-cols-4 gap-8 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
-          {apps.map((app) => (
-            <button
-              key={app.id}
-              onClick={() => onAppClick(app.id)}
-              className="flex flex-col items-center justify-center gap-2 text-white transition-transform hover:scale-110 focus:outline-none"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-black/40">
-                {app.icon}
+          {apps.map((app) => {
+            const buttonContent = (
+              <div
+                className="flex flex-col items-center justify-center gap-2 text-white transition-transform hover:scale-110 focus:outline-none"
+              >
+                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-black/40">
+                  {app.icon}
+                </div>
+                <span className="w-full truncate text-center text-xs font-medium">
+                  {app.title}
+                </span>
               </div>
-              <span className="w-full truncate text-center text-xs font-medium">
-                {app.title}
-              </span>
-            </button>
-          ))}
+            );
+
+            if (app.externalUrl) {
+              return (
+                <button key={app.id} onClick={() => handleAppClick(app)}>
+                  {buttonContent}
+                </button>
+              );
+            }
+
+            return (
+              <Link key={app.id} href={`/${app.id}`} onClick={() => handleAppClick(app)} passHref>
+                {buttonContent}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

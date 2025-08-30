@@ -1,75 +1,28 @@
 'use client';
 
 import { useEffect } from 'react';
-import Header from '@/components/portfolio/Header';
-import Dock from '@/components/portfolio/Dock';
-import AppDrawer from '@/components/portfolio/AppDrawer';
-import AppWindow from '@/components/portfolio/AppWindow';
+import { useRouter } from 'next/navigation';
 import LoginScreen from '@/components/portfolio/LoginScreen';
-import FishEasterEgg from '@/components/portfolio/FishEasterEgg';
 import { useAppManager } from '@/hooks/useAppManager';
 
 export default function Home() {
-  const {
-    activeApp,
-    isDrawerOpen,
-    isLoggedIn,
-    apps,
-    allApps,
-    dockApps,
-    minimizedApps,
-    openApp,
-    closeApp,
-    minimizeApp,
-    handleLogin,
-    setDrawerOpen,
-  } = useAppManager();
+  const { isLoggedIn, handleLogin } = useAppManager();
+  const router = useRouter();
 
-  // Prevent scrolling when app windows or drawers are open
   useEffect(() => {
-    if (activeApp || isDrawerOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
+    if (isLoggedIn) {
+      router.replace('/profile');
     }
-  }, [activeApp, isDrawerOpen]);
+  }, [isLoggedIn, router]);
 
   if (!isLoggedIn) {
     return <LoginScreen onLoginComplete={handleLogin} />;
   }
 
+  // You can show a loading spinner here while redirecting
   return (
-    <div className="desktop-background flex h-screen w-screen flex-col overflow-hidden font-headline">
-      <Header />
-      <div className="flex flex-1 overflow-hidden">
-        <Dock
-          apps={dockApps.map(id => apps[id])}
-          showAppsButton={apps['show-apps']}
-          onAppClick={openApp}
-          activeApp={activeApp}
-          minimizedApps={minimizedApps}
-        />
-        <main className="relative flex-1">
-           <FishEasterEgg />
-          {activeApp && apps[activeApp] && (
-            <AppWindow 
-              appId={activeApp}
-              title={apps[activeApp].title} 
-              onClose={closeApp}
-              onMinimize={minimizeApp}
-            >
-              {apps[activeApp].content}
-            </AppWindow>
-          )}
-        </main>
-      </div>
-
-      <AppDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        apps={allApps}
-        onAppClick={openApp}
-      />
+    <div className="flex h-screen w-screen items-center justify-center bg-background">
+      <p>Loading Desktop...</p>
     </div>
   );
 }
