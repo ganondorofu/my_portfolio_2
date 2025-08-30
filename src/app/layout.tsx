@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { AppManagerProvider } from '@/providers/AppManagerProvider';
 import './globals.css';
 
 const siteUrl = 'https://komeniki.net';
@@ -58,8 +59,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <AppManagerProvider>
+            {children}
+            <Toaster />
+          </AppManagerProvider>
         </ThemeProvider>
       </body>
     </html>

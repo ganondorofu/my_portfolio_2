@@ -4,19 +4,15 @@ import Header from '@/components/portfolio/Header';
 import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import { useAppManager } from '@/hooks/useAppManager';
+import { AppManagerProvider } from '@/providers/AppManagerProvider';
 
-export default function DesktopLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DesktopLayoutContent({ children }: { children: React.ReactNode }) {
   const {
     isDrawerOpen,
     apps,
     allApps,
     dockApps,
     setDrawerOpen,
-    openApp,
   } = useAppManager();
 
   return (
@@ -38,5 +34,17 @@ export default function DesktopLayout({
         apps={allApps}
       />
     </div>
+  );
+}
+
+export default function DesktopLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AppManagerProvider>
+      <DesktopLayoutContent>{children}</DesktopLayoutContent>
+    </AppManagerProvider>
   );
 }
