@@ -1,4 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
+import type { AppID } from './apps';
 
 export interface ProfileData {
   name: string;
@@ -16,7 +18,7 @@ export interface ProfileData {
 export interface Project {
   title: string;
   category: string;
-  description: string;
+  description:string;
   technologies: string[];
   status: 'Production' | 'Completed' | 'Active';
   url?: string;
@@ -40,4 +42,12 @@ export interface Achievement {
     details: string;
     date: string;
   }[];
+}
+
+export interface App {
+  id: AppID;
+  title: string;
+  icon: ReactNode;
+  content?: ReactNode;
+  externalUrl?: string;
 }
