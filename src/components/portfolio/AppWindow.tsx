@@ -51,9 +51,9 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
   return (
     <div
       className={cn(
-        "absolute inset-0 z-30 flex items-center justify-center transition-all duration-300 ease-in-out",
+        "absolute inset-0 z-30 flex items-center justify-center transition-all ease-in-out",
         windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8',
-        isTerminal ? '' : 'bg-black/30 backdrop-blur-sm'
+        !isTerminal ? '' : 'bg-black/30 backdrop-blur-sm'
       )}
       onClick={onClose}
     >

@@ -16,8 +16,10 @@ export default function Home() {
     apps,
     allApps,
     dockApps,
+    minimizedApps,
     openApp,
     closeApp,
+    minimizeApp,
     handleLogin,
     setDrawerOpen,
   } = useAppManager();
@@ -44,6 +46,7 @@ export default function Home() {
           showAppsButton={apps['show-apps']}
           onAppClick={openApp}
           activeApp={activeApp}
+          minimizedApps={minimizedApps}
         />
         <main className="relative flex-1">
           {activeApp && apps[activeApp] && (
@@ -51,6 +54,7 @@ export default function Home() {
               appId={activeApp}
               title={apps[activeApp].title} 
               onClose={closeApp}
+              onMinimize={minimizeApp}
             >
               {apps[activeApp].content}
             </AppWindow>

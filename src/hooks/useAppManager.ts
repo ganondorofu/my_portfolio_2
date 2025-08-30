@@ -7,6 +7,7 @@ export function useAppManager() {
   const [activeApp, setActiveApp] = useState<AppID | null>(null);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [minimizedApps, setMinimizedApps] = useState<Set<AppID>>(new Set());
 
   useEffect(() => {
     // Open the profile app by default once logged in, with a delay
@@ -37,12 +38,29 @@ export function useAppManager() {
       window.open(app.externalUrl, '_blank');
     } else {
       setActiveApp(id);
+      setMinimizedApps(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
       setDrawerOpen(false);
     }
   };
 
   const closeApp = () => {
+    if (activeApp) {
+      setMinimizedApps(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(activeApp);
+        return newSet;
+      });
+      setActiveApp(null);
+    }
+  };
+  
+  const minimizeApp = (id: AppID) => {
     setActiveApp(null);
+    setMinimizedApps(prev => new Set(prev).add(id));
   };
 
   const handleLogin = () => {
@@ -65,8 +83,10 @@ export function useAppManager() {
     apps,
     allApps,
     dockApps,
+    minimizedApps,
     openApp,
     closeApp,
+    minimizeApp,
     handleLogin,
     setDrawerOpen,
     setIsLoggedIn,
