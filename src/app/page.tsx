@@ -10,9 +10,11 @@ import {
   BrainCircuit,
   Mail,
   Github,
+  Grid3x3,
 } from 'lucide-react';
 import Header from '@/components/portfolio/Header';
 import Dock from '@/components/portfolio/Dock';
+import AppDrawer from '@/components/portfolio/AppDrawer';
 import DesktopIcon from '@/components/portfolio/DesktopIcon';
 import AppWindow from '@/components/portfolio/AppWindow';
 
@@ -31,7 +33,8 @@ export type AppID =
   | 'achievements'
   | 'learning'
   | 'contact'
-  | 'github';
+  | 'github'
+  | 'show-apps';
 
 interface App {
   id: AppID;
@@ -43,6 +46,7 @@ interface App {
 
 export default function Home() {
   const [activeApp, setActiveApp] = useState<AppID | null>(null);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   const apps: Record<AppID, App> = useMemo(
     () => ({
@@ -88,16 +92,26 @@ export default function Home() {
         icon: <Github className="size-8" />,
         externalUrl: 'https://github.com/ganondorofu',
       },
+      'show-apps': {
+        id: 'show-apps',
+        title: 'Show Applications',
+        icon: <Grid3x3 className="size-7" />,
+      },
     }),
     []
   );
 
   const openApp = (id: AppID) => {
+    if (id === 'show-apps') {
+      setDrawerOpen(true);
+      return;
+    }
     const app = apps[id];
     if (app.externalUrl) {
       window.open(app.externalUrl, '_blank');
     } else {
       setActiveApp(id);
+      setDrawerOpen(false);
     }
   };
 
@@ -107,6 +121,7 @@ export default function Home() {
 
   const desktopApps: AppID[] = ['profile', 'projects', 'skills', 'achievements'];
   const dockApps: AppID[] = ['profile', 'projects', 'learning', 'contact', 'github'];
+  const allAppsForDrawer = Object.values(apps).filter(app => app.id !== 'show-apps');
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-headline">
@@ -114,6 +129,7 @@ export default function Home() {
       <div className="flex flex-1">
         <Dock 
           apps={dockApps.map((id) => apps[id])} 
+          showAppsButton={apps['show-apps']}
           onAppClick={openApp}
           activeApp={activeApp}
         />
@@ -136,6 +152,13 @@ export default function Home() {
           {apps[activeApp].content}
         </AppWindow>
       )}
+
+      <AppDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        apps={allAppsForDrawer}
+        onAppClick={openApp}
+      />
     </div>
   );
 }
