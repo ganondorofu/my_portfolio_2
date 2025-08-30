@@ -8,8 +8,8 @@ const FishEasterEgg = () => {
   const animationFrameId = useRef<number>();
   const animationStartTime = useRef<number>(0);
 
-  const fishWidth = 100;
-  const fishHeight = 60;
+  const fishWidth = 120;
+  const fishHeight = 80;
 
   const drawFish = (tailAngle = 0) => {
     const canvas = canvasRef.current;
@@ -21,40 +21,57 @@ const FishEasterEgg = () => {
 
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 3;
     
     // Body
     ctx.beginPath();
-    ctx.ellipse(0, 0, 40, 20, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffcc00'; // Orange-yellow
-    ctx.fill();
-    ctx.strokeStyle = '#e6b800';
-    ctx.lineWidth = 2;
+    ctx.moveTo(-50, 0); // nose
+    ctx.quadraticCurveTo(0, -40, 40, -20); // top
+    ctx.lineTo(55, -30); // tail top start
+    ctx.lineTo(55, 30); // tail bottom end
+    ctx.lineTo(40, 20); // tail bottom join
+    ctx.quadraticCurveTo(0, 40, -50, 0); // bottom
     ctx.stroke();
-
+    
     // Eye
     ctx.beginPath();
-    ctx.arc(25, -5, 4, 0, Math.PI * 2);
+    ctx.arc(-35, -2, 3, 0, Math.PI * 2);
     ctx.fillStyle = 'white';
     ctx.fill();
+
+    // Gill
     ctx.beginPath();
-    ctx.arc(26, -5, 2, 0, Math.PI * 2);
-    ctx.fillStyle = 'black';
-    ctx.fill();
+    ctx.moveTo(-20, -15);
+    ctx.quadraticCurveTo(-10, 0, -20, 15);
+    ctx.stroke();
+
+    // Dorsal Fin
+    ctx.beginPath();
+    ctx.moveTo(0, -28);
+    ctx.lineTo(15, -38);
+    ctx.lineTo(25, -25);
+    ctx.stroke();
     
-    // Tail
+    // Pectoral Fin
+    ctx.beginPath();
+    ctx.moveTo(-15, 18);
+    ctx.lineTo(-5, 32);
+    ctx.lineTo(5, 18);
+    ctx.stroke();
+    
+    // Tail fin details with animation
     ctx.save();
-    ctx.translate(-40, 0);
+    ctx.translate(55, 0); 
     ctx.rotate(tailAngle);
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(-20, -20);
-    ctx.lineTo(-15, 0);
-    ctx.lineTo(-20, 20);
-    ctx.closePath();
-    ctx.fillStyle = '#ffcc00';
-    ctx.fill();
+    ctx.moveTo(0, -30);
+    ctx.lineTo(20, -15);
+    ctx.lineTo(20, 15);
+    ctx.lineTo(0, 30);
     ctx.stroke();
     ctx.restore();
+
 
     ctx.restore();
   };
@@ -73,7 +90,7 @@ const FishEasterEgg = () => {
           drawFish(0); 
           return;
         }
-        const angle = Math.sin(elapsedTime / 40) * 0.5; // Flapping motion
+        const angle = Math.sin(elapsedTime / 40) * 0.4; // Flapping motion
         drawFish(angle);
         animationFrameId.current = requestAnimationFrame(animate);
       };
@@ -112,8 +129,8 @@ const FishEasterEgg = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={fishWidth + 40}
-      height={fishHeight + 40}
+      width={fishWidth + 60}
+      height={fishHeight + 60}
       onClick={handleClick}
       className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-0"
       style={{ imageRendering: 'pixelated' }}
