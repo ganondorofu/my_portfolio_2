@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo, useEffect, createContext, ReactNode } from 'react';
-import { apps as appConfig, type AppID } from '@/lib/apps.tsx';
+import { apps as appConfig, type AppID } from '@/lib/apps';
 import { useParams, useRouter } from 'next/navigation';
 import type { App } from '@/lib/types';
+import { appRegistry } from '@/lib/app-registry';
 
 interface AppManagerContextType {
   activeApp: AppID | null;
@@ -36,7 +37,16 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [minimizedApps, setMinimizedApps] = useState<Set<AppID>>(new Set());
 
-  const apps = useMemo(() => appConfig, []);
+  const apps = useMemo(() => {
+    const appsWithContent: Record<AppID, App> = { ...appConfig };
+    for (const appId in appRegistry) {
+        if(appsWithContent[appId as AppID]) {
+            const AppContent = appRegistry[appId as AppID];
+            appsWithContent[appId as AppID]!.content = <AppContent />;
+        }
+    }
+    return appsWithContent;
+  }, []);
 
   const allApps = useMemo(
     () => Object.values(apps).filter(app => app.id !== 'show-apps'),

@@ -71,7 +71,6 @@ export default function AppWindow({ appId, title, children }: AppWindowProps) {
           (isMobile || windowState === 'maximized') ? 'rounded-none border-0' : 'rounded-lg',
           isTerminal ? 'border-2 border-primary/50' : 'border'
         )}
-        onClick={(e) => e.stopPropagation()}
       >
         <CardHeader className={cn(
           "flex flex-row items-center justify-between space-y-0 p-2 pl-4",

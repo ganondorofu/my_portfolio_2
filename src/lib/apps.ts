@@ -1,20 +1,13 @@
-'use client';
+'use server';
 import {
   User,
   Folder,
   Wrench,
   Award,
-  BrainCircuit,
   Mail,
   Github,
   Grid3x3,
 } from 'lucide-react';
-
-import Profile from '@/components/portfolio/apps/Profile';
-import Projects from '@/components/portfolio/apps/Projects';
-import Skills from '@/components/portfolio/apps/Skills';
-import Achievements from '@/components/portfolio/apps/Achievements';
-import Contact from '@/components/portfolio/apps/Contact';
 import type { App } from './types';
 
 export type AppID =
@@ -31,31 +24,26 @@ export const apps: Record<AppID, App> = {
     id: 'profile',
     title: 'プロフィール (Profile)',
     icon: <User className="size-10 text-sky-400" />,
-    content: <Profile />,
   },
   projects: {
     id: 'projects',
     title: 'プロジェクト (Projects)',
     icon: <Folder className="size-10 text-amber-500" />,
-    content: <Projects />,
   },
   skills: {
     id: 'skills',
     title: 'スキル (Skills)',
     icon: <Wrench className="size-10 text-teal-400" />,
-    content: <Skills />,
   },
   achievements: {
     id: 'achievements',
     title: '実績 (Achievements)',
     icon: <Award className="size-10 text-yellow-400" />,
-    content: <Achievements />,
   },
   contact: {
     id: 'contact',
     title: 'お問い合わせ (Contact)',
     icon: <Mail className="size-10 text-lime-500" />,
-    content: <Contact />,
   },
   github: {
     id: 'github',

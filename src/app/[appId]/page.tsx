@@ -1,32 +1,14 @@
-'use client';
-
-import { useAppManager } from '@/hooks/useAppManager';
-import AppWindow from '@/components/portfolio/AppWindow';
-import FishEasterEgg from '@/components/portfolio/FishEasterEgg';
 import { apps } from '@/lib/apps';
+import {AppView} from '@/components/portfolio/AppView';
 
 export async function generateStaticParams() {
   return Object.values(apps)
-    .filter(app => !app.externalUrl && app.content)
+    .filter(app => !app.externalUrl)
     .map(app => ({
       appId: app.id,
     }));
 }
 
-export default function AppView() {
-  const { activeApp, apps } = useAppManager();
-
-  return (
-    <>
-      <FishEasterEgg />
-      {activeApp && apps[activeApp] && (
-        <AppWindow
-          appId={activeApp}
-          title={apps[activeApp].title}
-        >
-          {apps[activeApp].content}
-        </AppWindow>
-      )}
-    </>
-  );
+export default function AppIdPage(){
+  return (<AppView />)
 }
