@@ -9,15 +9,15 @@ export const profileData: ProfileData = {
   github: '@ganondorofu',
   learningPolicy: [
     {
-      title: '実践重視',
+      title: '- 実践重視',
       description: '実際に動くプロジェクトで学ぶ方針',
     },
     {
-      title: '自動化',
+      title: '- 自動化',
       description: '開発・デプロイの自動化を進める',
     },
     {
-      title: 'AI活用',
+      title: '- AI活用',
       description: '知識のない分野や難しい課題にもAIを使って積極的に挑戦',
     },
   ],
@@ -30,7 +30,6 @@ export const projectsData: Project[] = [
     description: 'クラスの連絡・課題・時間割管理ツール',
     technologies: ['React', 'TypeScript', 'Firebase', 'Gemini API', 'Tailwind CSS', 'Vercel'],
     status: 'Production',
-    url: 'https://class-connect-red.vercel.app/',
     github: 'https://github.com/ganondorofu/ClassConnect',
     image: 'https://picsum.photos/600/400?random=1',
   },
@@ -57,6 +56,7 @@ export const projectsData: Project[] = [
     description: '持ち物チェック＆通知アプリ',
     technologies: ['Flutter', 'Dart', 'SQLite', 'Local Notifications'],
     status: 'Completed',
+    github: 'https://github.com/OMEGA-himajin/remind-dev',
     image: 'https://picsum.photos/600/400?random=4',
   },
   {
