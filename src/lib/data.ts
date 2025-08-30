@@ -9,15 +9,15 @@ export const profileData: ProfileData = {
   github: '@ganondorofu',
   learningPolicy: [
     {
-      title: '🎯 実践重視',
+      title: '実践重視',
       description: '実際に動くプロジェクトで学ぶ方針',
     },
     {
-      title: '🔄 自動化',
+      title: '自動化',
       description: '開発・デプロイの自動化を進める',
     },
     {
-      title: '🤖 AI活用',
+      title: 'AI活用',
       description: '知識のない分野や難しい課題にもAIを使って積極的に挑戦',
     },
   ],

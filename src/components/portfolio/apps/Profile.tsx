@@ -42,8 +42,8 @@ const allOutputLines: ReactNode[] = [
   </div>,
   ...profileData.learningPolicy.map((policy, index) => (
     <div key={`policy-${index}`} className="space-y-3 pl-2">
-        <div className="font-bold text-base text-gray-200">{policy.title}</div>
-        <p className="text-gray-400 pl-2">- {policy.description}</p>
+        <div className="font-bold text-base text-gray-200">- {policy.title}</div>
+        <p className="text-gray-400 pl-4">{policy.description}</p>
     </div>
   )),
 ];
@@ -77,7 +77,7 @@ export default function Profile() {
         if (i >= allOutputLines.length) {
           clearInterval(displayOutput);
         }
-      }, 75); // Faster line-by-line output
+      }, 50); // Faster line-by-line output
       return () => clearInterval(displayOutput);
     }
   }, [showOutput]);
