@@ -12,7 +12,7 @@ const FishEasterEgg = () => {
   const fishWidth = 240;
   const fishHeight = 160;
 
-  const drawFish = (tailAngle = 0) => {
+  const drawFish = (tailAngle = 0, bodyBend = 0) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -22,30 +22,31 @@ const FishEasterEgg = () => {
 
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.scale(4, 4); // Scale up the drawing
+    ctx.scale(4, 4);
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 1.5;
     
     // Tail fin (animated)
     ctx.save();
-    ctx.translate(47.5, 0); // Position at the base of the tail
+    ctx.translate(47.5, 0);
     ctx.rotate(tailAngle);
     ctx.beginPath();
     ctx.moveTo(0, -25);
     ctx.lineTo(25, -15);
     ctx.lineTo(25, 15);
     ctx.lineTo(0, 25);
+    ctx.closePath();
     ctx.stroke();
     ctx.restore();
     
-    // Body
+    // Body (animated)
     ctx.beginPath();
     ctx.moveTo(-50, 0); // nose
-    ctx.quadraticCurveTo(0, -40, 40, -20); // top
+    ctx.quadraticCurveTo(0, -40 + bodyBend, 40, -20); // top
     ctx.lineTo(47.5, -25); // tail top join
     ctx.moveTo(47.5, 25); // tail bottom join
     ctx.lineTo(40, 20); // back to body
-    ctx.quadraticCurveTo(0, 40, -50, 0); // bottom
+    ctx.quadraticCurveTo(0, 40 + bodyBend, -50, 0); // bottom
     ctx.stroke();
     
     // Eye
@@ -57,20 +58,20 @@ const FishEasterEgg = () => {
     // Gill
     ctx.beginPath();
     ctx.moveTo(-20, -15);
-    ctx.quadraticCurveTo(-10, 0, -20, 15);
+    ctx.quadraticCurveTo(-10 + bodyBend / 2, 0, -20, 15);
     ctx.stroke();
 
     // Dorsal Fin
     ctx.beginPath();
-    ctx.moveTo(0, -28);
-    ctx.lineTo(15, -38);
+    ctx.moveTo(0, -28 + bodyBend / 2);
+    ctx.lineTo(15, -38 + bodyBend / 2);
     ctx.lineTo(25, -25);
     ctx.stroke();
     
     // Pectoral Fin
     ctx.beginPath();
     ctx.moveTo(-15, 18);
-    ctx.lineTo(-5, 32);
+    ctx.lineTo(-5, 32 + bodyBend);
     ctx.lineTo(5, 18);
     ctx.stroke();
 
@@ -89,11 +90,12 @@ const FishEasterEgg = () => {
         const elapsedTime = time - animationStartTime.current;
         if (elapsedTime > 500) { // Animate for 500ms
           setIsAnimating(false);
-          drawFish(0); 
+          drawFish(0, 0); 
           return;
         }
-        const angle = Math.sin(elapsedTime / 50) * 0.8; // Flapping motion
-        drawFish(angle);
+        const angle = Math.sin(elapsedTime / 50) * 0.8;
+        const bend = Math.sin(elapsedTime / 50) * 10;
+        drawFish(angle, bend);
         animationFrameId.current = requestAnimationFrame(animate);
       };
       animationFrameId.current = requestAnimationFrame(animate);
@@ -118,9 +120,8 @@ const FishEasterEgg = () => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     
-    // Simple bounding box check for the fish body, adjusted for scale
-    const scaledWidth = fishWidth * 1.2 * 4; // Adjust for scale
-    const scaledHeight = fishHeight * 1.2 * 4; // Adjust for scale
+    const scaledWidth = fishWidth * 4; 
+    const scaledHeight = fishHeight * 4;
 
     if (
       x > centerX - scaledWidth / 2 &&
