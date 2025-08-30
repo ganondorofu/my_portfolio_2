@@ -6,28 +6,29 @@ export default function Clock() {
   const [dateTime, setDateTime] = useState('');
 
   useEffect(() => {
-    const updateClock = () => {
+    const updateDateTime = () => {
       const now = new Date();
-      const date = now.toLocaleDateString('ja-JP', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short',
-      });
-      const time = now.toLocaleTimeString('ja-JP', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      setDateTime(`${date} ${time}`);
+      setDateTime(
+        now.toLocaleDateString('ja-JP', {
+          month: 'long',
+          day: 'numeric',
+        }) +
+          ' ' +
+          now.toLocaleTimeString('ja-JP', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+      );
     };
 
-    updateClock();
-    const timerId = setInterval(updateClock, 1000);
+    updateDateTime();
+    const timerId = setInterval(updateDateTime, 1000);
 
     return () => clearInterval(timerId);
   }, []);
 
   if (!dateTime) {
-    return <div className="w-40" />; // Placeholder for initial render
+    return <div className="w-48" />; // Placeholder for initial render
   }
 
   return <div>{dateTime}</div>;
