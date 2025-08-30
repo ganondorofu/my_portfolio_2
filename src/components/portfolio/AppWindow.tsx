@@ -8,6 +8,7 @@ import { X, Minus, Square } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import type { AppID } from '@/lib/apps';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AppWindowProps {
   appId: AppID | null;
@@ -22,6 +23,7 @@ type WindowState = 'default' | 'maximized';
 export default function AppWindow({ appId, title, onClose, onMinimize, children }: AppWindowProps) {
   const isTerminal = appId === 'profile';
   const [windowState, setWindowState] = useState<WindowState>('default');
+  const isMobile = useIsMobile();
 
   // Reset window state when app changes
   useEffect(() => {
@@ -39,20 +41,20 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
   };
 
   const windowSizeClasses = {
-    default: 'h-[90vh] w-[90vw] max-w-4xl',
+    default: 'h-[90vh] md:w-[90vw] w-screen max-w-4xl',
     maximized: 'h-full w-full',
   };
   
   const cardBgClass = isTerminal ? 'bg-[#300A24]/95 backdrop-blur-xl' : 'bg-card';
   const headerBgClass = isTerminal ? 'bg-black/50' : 'bg-muted/40';
   const textColorClass = isTerminal ? 'text-white/80' : 'text-card-foreground';
-  const contentPadding = isTerminal ? 'p-0' : 'p-6';
+  const contentPadding = isTerminal ? 'p-0' : 'p-4 md:p-6';
 
   return (
     <div
       className={cn(
         "absolute inset-0 z-30 flex items-center justify-center transition-all ease-in-out",
-        windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8',
+        windowState === 'maximized' || isMobile ? 'p-0' : 'p-4 md:p-8',
         !isTerminal ? '' : 'bg-black/30 backdrop-blur-sm'
       )}
       onClick={onClose}
@@ -60,9 +62,9 @@ export default function AppWindow({ appId, title, onClose, onMinimize, children 
       <Card
         className={cn(
           "flex flex-col overflow-hidden shadow-2xl transition-[width,height] ease-in-out",
-          windowSizeClasses[windowState],
+          (isMobile || windowState === 'maximized') ? windowSizeClasses.maximized : windowSizeClasses.default,
           cardBgClass,
-          windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg',
+          (isMobile || windowState === 'maximized') ? 'rounded-none border-0' : 'rounded-lg',
           isTerminal ? 'border-2 border-primary/50' : 'border'
         )}
         onClick={(e) => e.stopPropagation()}

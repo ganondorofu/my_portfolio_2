@@ -17,12 +17,12 @@ export default function Achievements() {
             <AccordionContent>
               <ul className="space-y-4 pt-2">
                 {category.items.map((item) => (
-                  <li key={item.title} className="flex flex-col md:flex-row md:justify-between">
-                    <div>
+                  <li key={item.title} className="flex flex-col md:flex-row md:items-start md:justify-between">
+                    <div className='flex-1'>
                       <p className="font-semibold">{item.title}</p>
                       <p className="text-sm text-muted-foreground">{item.details}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1 md:mt-0">{item.date}</p>
+                    <p className="text-sm text-muted-foreground mt-1 md:mt-0 md:ml-4 shrink-0">{item.date}</p>
                   </li>
                 ))}
               </ul>
