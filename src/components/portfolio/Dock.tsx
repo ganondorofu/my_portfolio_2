@@ -34,7 +34,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
                   <button
                     onClick={() => onAppClick(app.id)}
                     className={cn(
-                      'relative flex h-12 w-12 items-center justify-center text-white transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
+                      'relative flex h-12 w-12 items-center justify-center rounded-lg text-white transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
                       'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
                       app.id === activeApp ? 'bg-white/20' : 'bg-white/10'
                     )}
@@ -59,7 +59,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
               <TooltipTrigger asChild>
                 <button
                   onClick={() => onAppClick(showAppsButton.id)}
-                  className="flex h-12 w-12 items-center justify-center text-white transition-all duration-200 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
+                  className="flex h-12 w-12 items-center justify-center rounded-lg text-white transition-all duration-200 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
                   aria-label={showAppsButton.title}
                 >
                   {showAppsButton.icon}
