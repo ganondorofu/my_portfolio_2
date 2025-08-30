@@ -19,7 +19,7 @@ export default function AppDrawer({ isOpen, onClose, apps, onAppClick }: AppDraw
 
   return (
     <div
-      className="fixed inset-y-0 left-16 z-40 flex flex-col bg-black/80 backdrop-blur-md"
+      className="fixed inset-y-0 left-24 z-40 flex flex-col bg-black/80 backdrop-blur-md"
       onClick={onClose}
     >
       <div className="flex-1 p-8 pt-20 md:p-16">
