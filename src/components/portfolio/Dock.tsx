@@ -25,10 +25,10 @@ interface DockProps {
 }
 
 export default function Dock({ apps, showAppsButton }: DockProps) {
-  const { activeApp, minimizedApps, isDrawerOpen, setDrawerOpen } = useAppManager();
+  const { activeApp, minimizedApps, setDrawerOpen } = useAppManager();
   const isAppOpen = (appId: AppID) => activeApp === appId || minimizedApps.has(appId);
 
-  const handleAppClick = (app: DockApp) => {
+  const handleSpecialClick = (app: DockApp) => {
     if (app.id === 'show-apps') {
       setDrawerOpen(true);
     } else if (app.externalUrl) {
@@ -37,6 +37,8 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
   };
 
   const AppButton = ({ app }: { app: DockApp }) => {
+    const isSpecialButton = app.externalUrl || app.id === 'show-apps';
+
     const commonProps = {
       className: cn(
         'relative flex h-16 w-16 items-center justify-center rounded-xl border-2 border-transparent transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
@@ -49,7 +51,7 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
     const buttonContent = (
       <>
         {app.icon}
-        {isAppOpen(app.id) && (
+        {isAppOpen(app.id) && !isSpecialButton && (
           <span className={cn(
             "absolute bottom-0 h-1 w-4 rounded-full",
             activeApp === app.id ? "bg-primary" : "bg-gray-400"
@@ -58,9 +60,9 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
       </>
     );
 
-    if (app.externalUrl || app.id === 'show-apps') {
+    if (isSpecialButton) {
       return (
-        <button {...commonProps} onClick={() => handleAppClick(app)}>
+        <button {...commonProps} onClick={() => handleSpecialClick(app)}>
           {buttonContent}
         </button>
       );
@@ -97,13 +99,7 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
             <Separator className="my-1 h-px w-12 bg-white/20" />
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  onClick={() => setDrawerOpen(true)}
-                  className="flex h-16 w-16 items-center justify-center rounded-xl transition-all duration-200 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
-                  aria-label={showAppsButton.title}
-                >
-                  {showAppsButton.icon}
-                </button>
+                <AppButton app={showAppsButton} />
               </TooltipTrigger>
               <TooltipContent side="right">
                 <p>{showAppsButton.title}</p>
