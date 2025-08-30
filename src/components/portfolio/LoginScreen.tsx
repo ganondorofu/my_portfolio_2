@@ -82,8 +82,9 @@ export default function LoginScreen({ onLoginComplete }: LoginScreenProps) {
             <Input
               type="password"
               placeholder="Password"
-              value={password}
-              readOnly={isLoggingIn}
+              defaultValue={password}
+              onChange={() => {}}
+              readOnly
               className="h-12 w-full rounded-md border-primary/50 bg-black/30 pl-10 pr-12 text-center text-lg text-white placeholder:text-gray-400"
             />
             <Button
