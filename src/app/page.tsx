@@ -138,8 +138,8 @@ export default function Home() {
     return <LoginScreen onLoginComplete={handleLogin} />;
   }
 
-  const dockApps: AppID[] = ['profile', 'projects', 'learning', 'contact', 'github'];
-  const allAppsForDrawer = Object.values(apps).filter(app => app.id !== 'show-apps');
+  const allApps = useMemo(() => Object.values(apps).filter(app => app.id !== 'show-apps'), [apps]);
+  const dockApps: AppID[] = useMemo(() => allApps.map(app => app.id), [allApps]);
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-headline">
@@ -165,7 +165,7 @@ export default function Home() {
       <AppDrawer
         isOpen={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
-        apps={allAppsForDrawer}
+        apps={allApps}
         onAppClick={openApp}
       />
     </div>
