@@ -13,12 +13,13 @@ interface AppWindowProps {
   appId: AppID | null;
   title: string;
   onClose: () => void;
+  onMinimize: (id: AppID) => void;
   children: ReactNode;
 }
 
-type WindowState = 'default' | 'maximized' | 'minimized';
+type WindowState = 'default' | 'maximized';
 
-export default function AppWindow({ appId, title, onClose, children }: AppWindowProps) {
+export default function AppWindow({ appId, title, onClose, onMinimize, children }: AppWindowProps) {
   const isTerminal = appId === 'profile';
   const [windowState, setWindowState] = useState<WindowState>('default');
 
@@ -27,26 +28,19 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     setWindowState('default');
   }, [appId]);
 
-  if (windowState === 'minimized') {
-    // In a real OS, this would render something in the dock/taskbar
-    // For now, it just hides the window. We'd need a way to restore it.
-    // This part of the logic is stubbed out.
-    return null;
-  }
-
   const handleMaximize = () => {
     setWindowState(current => (current === 'maximized' ? 'default' : 'maximized'));
   };
-
+  
   const handleMinimize = () => {
-    // Minimizing logic is not implemented yet, so this is disabled.
-    console.log('Minimize clicked');
-    // setWindowState('minimized');
+    if(appId) {
+      onMinimize(appId);
+    }
   };
 
   const windowSizeClasses = {
     default: 'h-[90vh] w-[90vw] max-w-4xl',
-    maximized: 'h-full w-full max-w-full',
+    maximized: 'h-full w-full',
   };
   
   const cardBgClass = isTerminal ? 'bg-[#300A24]/95 backdrop-blur-xl' : 'bg-card';
@@ -57,9 +51,11 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
   return (
     <div
       className={cn(
-        "absolute inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
-        windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8'
+        "absolute inset-0 z-30 flex items-center justify-center transition-all duration-300 ease-in-out",
+        windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8',
+        isTerminal ? '' : 'bg-black/30 backdrop-blur-sm'
       )}
+      onClick={onClose}
     >
       <Card
         className={cn(
@@ -82,9 +78,8 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
              <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 disabled:opacity-100"
+              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700"
               onClick={handleMinimize}
-              disabled // Minimization not fully implemented
             >
                <Minus className="size-3 text-white" />
             </Button>
