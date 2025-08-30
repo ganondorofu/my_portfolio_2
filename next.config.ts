@@ -7,8 +7,8 @@ const repoName = 'yoneyone-portfolio';
 
 const nextConfig: NextConfig = {
   output: 'export',
-  basePath: isGithubActions ? `/${repoName}` : '',
-  assetPrefix: isGithubActions ? `/${repoName}/` : '',
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true,
     remotePatterns: [
