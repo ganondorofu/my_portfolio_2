@@ -1,4 +1,9 @@
+# *
 User-agent: *
 Allow: /
 
+# Host
+Host: https://komeniki.net
+
+# Sitemaps
 Sitemap: https://komeniki.net/sitemap.xml
