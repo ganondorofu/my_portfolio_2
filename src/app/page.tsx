@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import {
   User,
@@ -17,6 +17,7 @@ import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import DesktopIcon from '@/components/portfolio/DesktopIcon';
 import AppWindow from '@/components/portfolio/AppWindow';
+import LoginScreen from '@/components/portfolio/LoginScreen';
 
 // App Contents
 import Profile from '@/components/portfolio/apps/Profile';
@@ -47,6 +48,17 @@ interface App {
 export default function Home() {
   const [activeApp, setActiveApp] = useState<AppID | null>(null);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Prevent scrolling when app windows or drawers are open
+  useEffect(() => {
+    if (activeApp || isDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [activeApp, isDrawerOpen]);
+
 
   const apps: Record<AppID, App> = useMemo(
     () => ({
@@ -118,6 +130,14 @@ export default function Home() {
   const closeApp = () => {
     setActiveApp(null);
   };
+  
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  if (!isLoggedIn) {
+    return <LoginScreen onLoginComplete={handleLogin} />;
+  }
 
   const desktopApps: AppID[] = ['profile', 'projects', 'skills', 'achievements'];
   const dockApps: AppID[] = ['profile', 'projects', 'learning', 'contact', 'github'];
