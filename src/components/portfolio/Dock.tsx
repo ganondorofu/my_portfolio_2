@@ -36,7 +36,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
                     className={cn(
                       'relative flex h-12 w-12 items-center justify-center rounded-lg transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
                       'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
-                      app.id === activeApp ? 'bg-white/20' : 'bg-white/10'
+                      app.id === activeApp ? 'ring-2 ring-primary' : ''
                     )}
                     aria-label={`Open ${app.title}`}
                   >
