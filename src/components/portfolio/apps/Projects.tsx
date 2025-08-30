@@ -1,75 +1,85 @@
-import Image from 'next/image';
 import { projectsData } from '@/lib/data';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Github, Link as LinkIcon } from 'lucide-react';
+import { Github, Link as LinkIcon, Folder, FileText } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default function Projects() {
   const getStatusColor = (status: 'Production' | 'Completed' | 'Active') => {
     switch (status) {
-      case 'Production': return 'bg-green-500';
-      case 'Completed': return 'bg-blue-500';
-      case 'Active': return 'bg-yellow-500';
+      case 'Production': return 'text-green-500';
+      case 'Completed': return 'text-blue-500';
+      case 'Active': return 'text-yellow-500';
+      default: return 'text-muted-foreground';
     }
   };
+
+  const getIcon = (category: string) => {
+    switch(category.toLowerCase()) {
+      case 'web application':
+      case 'mobile app':
+      case 'desktop app':
+      case 'unity showcase':
+        return <FileText className="h-5 w-5 text-primary" />;
+      default:
+        return <Folder className="h-5 w-5 text-primary" />;
+    }
+  }
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-primary">Projects</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projectsData.map((project) => (
-          <Card key={project.title} className="flex flex-col">
-            <CardHeader>
-              <div className="relative mb-4 h-40 w-full">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-t-lg"
-                  data-ai-hint={`${project.category} technology`}
-                />
-              </div>
-              <div className="flex justify-between items-start">
-                <div>
-                    <CardTitle>{project.title}</CardTitle>
-                    <CardDescription>{project.category}</CardDescription>
-                </div>
-                 <Badge variant="outline" className="flex items-center gap-2 shrink-0">
-                    <span className={`h-2 w-2 rounded-full ${getStatusColor(project.status)}`}></span>
-                    {project.status}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {project.technologies.map(tech => <Badge key={tech} variant="secondary">{tech}</Badge>)}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <div className="flex w-full justify-end gap-2">
-                {project.url && (
-                  <Button asChild variant="outline" size="sm">
-                    <a href={project.url} target="_blank" rel="noopener noreferrer">
-                      <LinkIcon className="mr-2 h-4 w-4" />
-                      Visit
-                    </a>
-                  </Button>
-                )}
-                {project.github && (
-                  <Button asChild variant="outline" size="sm">
-                    <a href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="mr-2 h-4 w-4" />
-                      GitHub
-                    </a>
-                  </Button>
-                )}
-              </div>
-            </CardFooter>
-          </Card>
-        ))}
+      <div className="border rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[40px]"></TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead className="text-right">Links</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {projectsData.map((project) => (
+              <TableRow key={project.title}>
+                <TableCell>{getIcon(project.category)}</TableCell>
+                <TableCell>
+                  <div className="font-medium">{project.title}</div>
+                  <div className="text-sm text-muted-foreground">{project.description}</div>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {project.technologies.map(tech => <Badge key={tech} variant="secondary">{tech}</Badge>)}
+                  </div>
+                </TableCell>
+                <TableCell>
+                   <Badge variant="outline" className="flex items-center gap-2 shrink-0">
+                      <span className={`h-2 w-2 rounded-full ${getStatusColor(project.status).replace('text-','bg-')}`}></span>
+                      {project.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>{project.category}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    {project.url && (
+                      <Button asChild variant="ghost" size="icon">
+                        <a href={project.url} target="_blank" rel="noopener noreferrer" title="Visit project">
+                          <LinkIcon className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    )}
+                    {project.github && (
+                      <Button asChild variant="ghost" size="icon">
+                        <a href={project.github} target="_blank" rel="noopener noreferrer" title="View on GitHub">
+                          <Github className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
