@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { apps as appConfig, type AppID } from '@/lib/apps';
+import { useState, useMemo, useEffect } from 'react';
+import { apps as appConfig, type AppID } from '@/lib/apps.tsx';
 
 export function useAppManager() {
   const [activeApp, setActiveApp] = useState<AppID | null>(null);
@@ -15,7 +15,7 @@ export function useAppManager() {
     [apps]
   );
   
-  const dockApps: AppID[] = useMemo(() => allApps.map(app => app.id), [allApps]);
+  const dockApps = useMemo(() => allApps.map(app => app.id), [allApps]);
 
   const openApp = (id: AppID) => {
     if (id === 'show-apps') {
@@ -38,6 +38,15 @@ export function useAppManager() {
   const handleLogin = () => {
     setIsLoggedIn(true);
   };
+  
+  // Prevent scrolling when app windows or drawers are open
+  useEffect(() => {
+    if (activeApp || isDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [activeApp, isDrawerOpen]);
 
   return {
     activeApp,
