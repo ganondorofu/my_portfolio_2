@@ -62,8 +62,6 @@ export default function AppWindow({ appId, title, children }: AppWindowProps) {
         "absolute inset-0 z-30 flex items-center justify-center transition-all ease-in-out",
         windowState === 'maximized' || isMobile ? 'p-0' : 'p-4 md:p-8'
       )}
-      // Click-away to close is disabled in routing mode, as the background is always present.
-      // onClick={handleClose}
     >
       <Card
         className={cn(
