@@ -74,6 +74,6 @@ export const apps: Record<AppID, App> = {
   'show-apps': {
     id: 'show-apps',
     title: 'Show Applications',
-    icon: <Grid3x3 className="size-7" />,
+    icon: <Grid3x3 className="size-7 text-white" />,
   },
 };
