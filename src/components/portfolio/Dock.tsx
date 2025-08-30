@@ -26,7 +26,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
   return (
     <TooltipProvider>
       <aside className="z-50 flex shrink-0 flex-col items-center">
-        <div className="flex h-full w-24 flex-col items-center justify-between bg-black/30 py-2">
+        <div className="flex h-full w-24 flex-col items-center justify-between bg-black/50 py-2">
           <div className="flex flex-col items-center gap-2">
             {apps.map((app) => (
               <Tooltip key={app.id}>
