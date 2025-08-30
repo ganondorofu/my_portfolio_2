@@ -49,7 +49,7 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     maximized: 'h-full w-full max-w-full',
   };
   
-  const cardBgClass = isTerminal ? 'bg-[#300A24]/95' : 'bg-card';
+  const cardBgClass = isTerminal ? 'bg-[#300A24]/95 backdrop-blur-xl' : 'bg-card';
   const headerBgClass = isTerminal ? 'bg-black/50' : 'bg-muted/40';
   const textColorClass = isTerminal ? 'text-white/80' : 'text-card-foreground';
   const contentPadding = isTerminal ? 'p-0' : 'p-6';
@@ -60,11 +60,10 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
         "absolute inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
         windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8'
       )}
-      onClick={onClose}
     >
       <Card
         className={cn(
-          "flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-in-out",
+          "flex flex-col overflow-hidden shadow-2xl duration-300 ease-in-out",
           windowSizeClasses[windowState],
           cardBgClass,
           windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg',
