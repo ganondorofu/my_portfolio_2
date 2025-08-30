@@ -112,6 +112,9 @@ export default function Home() {
     []
   );
 
+  const allApps = useMemo(() => Object.values(apps).filter(app => app.id !== 'show-apps'), [apps]);
+  const dockApps: AppID[] = useMemo(() => allApps.map(app => app.id), [allApps]);
+
   const openApp = (id: AppID) => {
     if (id === 'show-apps') {
       setDrawerOpen(true);
@@ -137,9 +140,6 @@ export default function Home() {
   if (!isLoggedIn) {
     return <LoginScreen onLoginComplete={handleLogin} />;
   }
-
-  const allApps = useMemo(() => Object.values(apps).filter(app => app.id !== 'show-apps'), [apps]);
-  const dockApps: AppID[] = useMemo(() => allApps.map(app => app.id), [allApps]);
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-headline">
