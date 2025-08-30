@@ -58,7 +58,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp, mini
                     <p>{app.title}</p>
                   </TooltipContent>
                 </Tooltip>
-                {app.id === 'achievements' && <Separator className="my-1 h-px w-12 bg-white/20" />}
+                {app.id === 'contact' && <Separator className="my-1 h-px w-12 bg-white/20" />}
               </React.Fragment>
             ))}
           </div>
