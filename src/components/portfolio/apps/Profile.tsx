@@ -48,14 +48,17 @@ const allOutputLines: ReactNode[] = [
   )),
 ];
 
+let animationCompleted = false;
 
 export default function Profile() {
-  const [command, setCommand] = useState('');
-  const [showOutput, setShowOutput] = useState(false);
-  const [outputLines, setOutputLines] = useState<ReactNode[]>([]);
+  const [command, setCommand] = useState(animationCompleted ? `cat ./profile.md` : '');
+  const [showOutput, setShowOutput] = useState(animationCompleted);
+  const [outputLines, setOutputLines] = useState<ReactNode[]>(animationCompleted ? allOutputLines : []);
   const fullCommand = `cat ./profile.md`;
 
   useEffect(() => {
+    if (animationCompleted) return;
+
     let i = 0;
     const typing = setInterval(() => {
       setCommand(fullCommand.slice(0, i + 1));
@@ -69,29 +72,35 @@ export default function Profile() {
   }, [fullCommand]);
 
   useEffect(() => {
-    if (showOutput) {
-      let i = 0;
-      const displayOutput = setInterval(() => {
-        setOutputLines(prev => [...prev, allOutputLines[i]]);
-        i++;
-        if (i >= allOutputLines.length) {
-          clearInterval(displayOutput);
-        }
-      }, 50); // Faster line-by-line output
-      return () => clearInterval(displayOutput);
-    }
+    if (animationCompleted || !showOutput) return;
+    
+    let i = 0;
+    const displayOutput = setInterval(() => {
+      setOutputLines(prev => [...prev, allOutputLines[i]]);
+      i++;
+      if (i >= allOutputLines.length) {
+        clearInterval(displayOutput);
+        animationCompleted = true;
+      }
+    }, 50); // Faster line-by-line output
+    return () => clearInterval(displayOutput);
   }, [showOutput]);
+
+  const isAnimationRunning = !animationCompleted;
 
   return (
     <div className="font-code text-sm text-white rounded-lg">
-      <CommandLine>{command}<span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span></CommandLine>
+      <CommandLine>
+        {command}
+        {isAnimationRunning && <span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span>}
+      </CommandLine>
       
       {showOutput && (
         <div className="mt-4 space-y-2 text-gray-300">
           {outputLines.map((line, index) => (
             <div key={index}>{line}</div>
           ))}
-          {outputLines.length === allOutputLines.length && (
+          {!isAnimationRunning && (
              <CommandLine><span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span></CommandLine>
           )}
         </div>
