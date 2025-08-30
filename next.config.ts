@@ -3,7 +3,7 @@ import type {NextConfig} from 'next';
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 
 // Replace `your-repo-name` with the name of your repository
-const repoName = 'your-repo-name';
+const repoName = 'yoneyone-portfolio';
 
 const nextConfig: NextConfig = {
   output: 'export',
