@@ -38,27 +38,25 @@ export default function Home() {
   return (
     <div className="desktop-background flex h-screen w-screen flex-col overflow-hidden font-headline">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Dock
           apps={dockApps.map(id => apps[id])}
           showAppsButton={apps['show-apps']}
           onAppClick={openApp}
           activeApp={activeApp}
         />
-        <main className="flex-1">
-          {/* Desktop icons are managed by the OS-like UI */}
+        <main className="relative flex-1">
+          {activeApp && apps[activeApp] && (
+            <AppWindow 
+              appId={activeApp}
+              title={apps[activeApp].title} 
+              onClose={closeApp}
+            >
+              {apps[activeApp].content}
+            </AppWindow>
+          )}
         </main>
       </div>
-
-      {activeApp && apps[activeApp] && (
-        <AppWindow 
-          appId={activeApp}
-          title={apps[activeApp].title} 
-          onClose={closeApp}
-        >
-          {apps[activeApp].content}
-        </AppWindow>
-      )}
 
       <AppDrawer
         isOpen={isDrawerOpen}

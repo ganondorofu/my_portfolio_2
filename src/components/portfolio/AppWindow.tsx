@@ -57,9 +57,9 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
   return (
     <div
       className={cn(
-        "fixed inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
+        "absolute inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
         !isTerminal && "bg-black/30 backdrop-blur-sm",
-        windowState === 'maximized' ? 'p-0' : 'p-0'
+        windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8'
       )}
       onClick={onClose}
     >
@@ -76,36 +76,34 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
           "flex flex-row items-center justify-between space-y-0 p-2 pl-4",
           headerBgClass
         )}>
-           {/* Empty div to balance the flex layout */}
-          <div className="w-1/3"></div>
-           <h3 className={cn("w-1/3 text-center font-bold text-sm", textColorClass)}>
+          <h3 className={cn("font-bold text-sm", textColorClass)}>
             {title}
           </h3>
-          <div className="flex w-1/3 items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2">
              <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-white/10 hover:bg-white/20"
+              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 disabled:opacity-100"
               onClick={handleMinimize}
               disabled // Minimization not fully implemented
             >
-               <Minus className="size-4" />
+               <Minus className="size-3 text-white" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-white/10 hover:bg-white/20"
+              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700"
               onClick={handleMaximize}
             >
-               <Square className="size-4" />
+               <Square className="size-3 text-white" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-white/10 hover:bg-red-600/50"
+              className="size-6 rounded-full bg-red-500 hover:bg-red-600"
               onClick={onClose}
             >
-              <X className="size-4" />
+              <X className="size-4 text-white" />
             </Button>
           </div>
         </CardHeader>
