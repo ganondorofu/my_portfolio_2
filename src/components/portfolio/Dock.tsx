@@ -25,8 +25,8 @@ interface DockProps {
 export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: DockProps) {
   return (
     <TooltipProvider>
-      <aside className="z-50 flex shrink-0 items-center justify-center p-2">
-        <div className="flex h-full flex-col items-center justify-between rounded-lg bg-black/30 py-2">
+      <aside className="z-50 flex h-screen shrink-0 flex-col items-center p-2">
+        <div className="flex h-full w-16 flex-col items-center justify-between rounded-lg bg-black/30 py-2">
           <div className="flex flex-col items-center gap-2">
             {apps.map((app) => (
               <Tooltip key={app.id}>
