@@ -63,7 +63,7 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     >
       <Card
         className={cn(
-          "flex flex-col overflow-hidden shadow-2xl duration-300 ease-in-out",
+          "flex flex-col overflow-hidden shadow-2xl transition-[width,height] ease-in-out",
           windowSizeClasses[windowState],
           cardBgClass,
           windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg',
