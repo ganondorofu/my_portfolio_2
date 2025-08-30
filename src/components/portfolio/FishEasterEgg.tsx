@@ -21,7 +21,7 @@ const FishEasterEgg = () => {
 
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.scale(2, 2); // Scale up the drawing
+    ctx.scale(8, 8); // Scale up the drawing
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 1.5;
     
@@ -67,8 +67,8 @@ const FishEasterEgg = () => {
     ctx.rotate(tailAngle);
     ctx.beginPath();
     ctx.moveTo(0, -30);
-    ctx.lineTo(20, -15);
-    ctx.lineTo(20, 15);
+    ctx.lineTo(20, -10);
+    ctx.moveTo(20, 10);
     ctx.lineTo(0, 30);
     ctx.stroke();
     ctx.restore();
@@ -119,8 +119,8 @@ const FishEasterEgg = () => {
     const centerY = canvas.height / 2;
     
     // Simple bounding box check for the fish body, adjusted for scale
-    const scaledWidth = fishWidth * 1.2; // Use a slightly larger hitbox
-    const scaledHeight = fishHeight * 1.2;
+    const scaledWidth = fishWidth * 1.2 * 8; // Adjust for scale
+    const scaledHeight = fishHeight * 1.2 * 8; // Adjust for scale
 
     if (
       x > centerX - scaledWidth / 2 &&
@@ -135,8 +135,8 @@ const FishEasterEgg = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={fishWidth + 120} 
-      height={fishHeight + 120}
+      width={(fishWidth + 120) * 2} 
+      height={(fishHeight + 120) * 2}
       onClick={handleClick}
       className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-0"
       style={{ imageRendering: 'pixelated' }}
