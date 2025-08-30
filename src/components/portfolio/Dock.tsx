@@ -26,7 +26,7 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
   return (
     <TooltipProvider>
       <aside className="z-50 flex shrink-0 flex-col items-center">
-        <div className="flex h-full w-16 flex-col items-center justify-between bg-black/30 py-2">
+        <div className="flex h-full w-24 flex-col items-center justify-between bg-black/30 py-2">
           <div className="flex flex-col items-center gap-2">
             {apps.map((app) => (
               <Tooltip key={app.id}>
@@ -34,15 +34,12 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
                   <button
                     onClick={() => onAppClick(app.id)}
                     className={cn(
-                      'relative flex h-12 w-12 items-center justify-center rounded-lg transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
+                      'relative flex h-16 w-16 items-center justify-center rounded-xl border border-transparent transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
                       'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
-                      app.id === activeApp ? 'ring-2 ring-primary' : ''
+                      app.id === activeApp ? 'border-primary/80 bg-white/20' : 'hover:bg-white/10'
                     )}
                     aria-label={`Open ${app.title}`}
                   >
-                    {app.id === activeApp && (
-                      <span className="absolute left-0 top-1/2 h-4 w-1 -translate-y-1/2 rounded-r-full bg-primary"></span>
-                    )}
                     {app.icon}
                   </button>
                 </TooltipTrigger>
@@ -54,12 +51,12 @@ export default function Dock({ apps, showAppsButton, onAppClick, activeApp }: Do
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <Separator className="my-1 h-px w-8 bg-white/20" />
+            <Separator className="my-1 h-px w-12 bg-white/20" />
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={() => onAppClick(showAppsButton.id)}
-                  className="flex h-12 w-12 items-center justify-center rounded-lg transition-all duration-200 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
+                  className="flex h-16 w-16 items-center justify-center rounded-xl transition-all duration-200 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
                   aria-label={showAppsButton.title}
                 >
                   {showAppsButton.icon}
