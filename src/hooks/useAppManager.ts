@@ -9,9 +9,12 @@ export function useAppManager() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Open the profile app by default once logged in
+    // Open the profile app by default once logged in, with a delay
     if (isLoggedIn) {
-      setActiveApp('profile');
+      const timer = setTimeout(() => {
+        setActiveApp('profile');
+      }, 500); // 500ms delay
+      return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isLoggedIn]);
 
