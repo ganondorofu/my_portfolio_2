@@ -1,5 +1,3 @@
-'use server';
-
 import { MetadataRoute } from 'next';
 import { apps } from '@/lib/apps';
 
