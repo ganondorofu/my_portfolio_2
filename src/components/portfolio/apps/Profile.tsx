@@ -6,7 +6,7 @@ const CommandLine = ({ children, prompt = true }: { children: React.ReactNode; p
   <div className="flex items-center gap-2">
     {prompt && (
       <>
-        <span className="text-green-400">yoneyone@portfolio</span>
+        <span className="text-green-400">{profileData.name.toLowerCase()}@portfolio</span>
         <span className="text-primary">:</span>
         <span className="text-blue-400">~</span>
         <span className="text-white">$</span>
