@@ -1,7 +1,7 @@
 import type { ProfileData, Project, SkillCategory, Achievement } from './types';
 
 export const profileData: ProfileData = {
-  name: 'yoneyone',
+  name: 'komeniki',
   title: '学生 / ホビイスト開発者',
   school: '愛知県立愛知総合工科高等学校',
   affiliation: 'STEM研究部',
