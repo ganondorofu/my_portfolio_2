@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/providers/ThemeProvider';
-import { AppManagerProvider } from '@/providers/AppManagerProvider';
 import './globals.css';
 
 const siteUrl = 'https://komeniki.net';
@@ -9,33 +8,33 @@ const siteUrl = 'https://komeniki.net';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'yoneyone Portfolio',
-    template: `%s | yoneyone Portfolio`,
+    default: 'komeniki',
+    template: `%s | komeniki`,
   },
-  description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。制作したプロジェクト、スキル、実績などを紹介しています。',
-  keywords: ['yoneyone', 'ganondorofu', 'portfolio', 'ポートフォリオ', '学生', '開発者', 'React', 'TypeScript', 'Next.js'],
-  authors: [{ name: 'yoneyone', url: siteUrl }],
-  creator: 'yoneyone',
+  description: 'komeniki (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。制作したプロジェクト、スキル、実績などを紹介しています。',
+  keywords: ['komeniki', 'ganondorofu', 'portfolio', 'ポートフォリオ', '学生', '開発者', 'React', 'TypeScript', 'Next.js'],
+  authors: [{ name: 'komeniki', url: siteUrl }],
+  creator: 'komeniki',
   openGraph: {
     type: 'website',
     url: siteUrl,
-    title: 'yoneyone Portfolio',
-    description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
-    siteName: 'yoneyone Portfolio',
+    title: 'komeniki',
+    description: 'komeniki (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
+    siteName: 'komeniki',
     images: [
       {
         url: `${siteUrl}/ogp.png`,
         width: 1200,
         height: 630,
-        alt: 'yoneyone Portfolio OGP Image',
+        alt: 'komeniki OGP Image',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@ganondorofu_sub',
-    title: 'yoneyone Portfolio',
-    description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
+    title: 'komeniki',
+    description: 'komeniki (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
     images: [`${siteUrl}/ogp.png`],
   },
 };
