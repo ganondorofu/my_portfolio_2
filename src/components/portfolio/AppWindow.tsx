@@ -58,7 +58,6 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     <div
       className={cn(
         "absolute inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
-        isTerminal && "bg-black/30 backdrop-blur-sm",
         windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8'
       )}
       onClick={onClose}
@@ -69,7 +68,7 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
           windowSizeClasses[windowState],
           cardBgClass,
           windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg',
-          isTerminal ? 'border-2 border-primary/50 backdrop-blur-xl' : 'border'
+          isTerminal ? 'border-2 border-primary/50' : 'border'
         )}
         onClick={(e) => e.stopPropagation()}
       >
