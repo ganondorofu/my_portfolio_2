@@ -15,7 +15,6 @@ import {
 import Header from '@/components/portfolio/Header';
 import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
-import DesktopIcon from '@/components/portfolio/DesktopIcon';
 import AppWindow from '@/components/portfolio/AppWindow';
 import LoginScreen from '@/components/portfolio/LoginScreen';
 
@@ -139,7 +138,6 @@ export default function Home() {
     return <LoginScreen onLoginComplete={handleLogin} />;
   }
 
-  const desktopApps: AppID[] = ['profile', 'projects', 'skills', 'achievements'];
   const dockApps: AppID[] = ['profile', 'projects', 'learning', 'contact', 'github'];
   const allAppsForDrawer = Object.values(apps).filter(app => app.id !== 'show-apps');
 
@@ -154,16 +152,7 @@ export default function Home() {
           activeApp={activeApp}
         />
         <main className="flex-1 p-4 md:p-8">
-          <div className="grid h-full grid-cols-2 grid-rows-4 items-start justify-start gap-4">
-            {desktopApps.map((id) => (
-              <DesktopIcon
-                key={id}
-                icon={apps[id].icon}
-                title={apps[id].title}
-                onClick={() => openApp(id)}
-              />
-            ))}
-          </div>
+          {/* Desktop icons removed for a cleaner look */}
         </main>
       </div>
 

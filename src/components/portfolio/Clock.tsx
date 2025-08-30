@@ -3,17 +3,21 @@
 import { useState, useEffect } from 'react';
 
 export default function Clock() {
-  const [time, setTime] = useState('');
+  const [dateTime, setDateTime] = useState('');
 
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
-      setTime(
-        now.toLocaleTimeString('ja-JP', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      );
+      const date = now.toLocaleDateString('ja-JP', {
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+      });
+      const time = now.toLocaleTimeString('ja-JP', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      setDateTime(`${date} ${time}`);
     };
 
     updateClock();
@@ -22,9 +26,9 @@ export default function Clock() {
     return () => clearInterval(timerId);
   }, []);
 
-  if (!time) {
-    return <div className="w-12" />; // Placeholder for initial render
+  if (!dateTime) {
+    return <div className="w-40" />; // Placeholder for initial render
   }
 
-  return <div>{time}</div>;
+  return <div>{dateTime}</div>;
 }
