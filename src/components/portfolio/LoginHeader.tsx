@@ -29,7 +29,7 @@ export default function LoginHeader() {
   }, []);
 
   return (
-    <header className="flex h-8 w-full shrink-0 items-center justify-between bg-black/50 px-4 text-sm font-medium text-white/90">
+    <header className="flex h-8 w-full shrink-0 items-center justify-between px-4 text-sm font-medium text-white/90">
       <div className="w-1/3"></div>
       <div className="w-1/3 text-center">{dateTime}</div>
       <div className="flex w-1/3 justify-end items-center gap-3">
