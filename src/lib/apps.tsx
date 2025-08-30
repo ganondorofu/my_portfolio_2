@@ -14,7 +14,6 @@ import Profile from '@/components/portfolio/apps/Profile';
 import Projects from '@/components/portfolio/apps/Projects';
 import Skills from '@/components/portfolio/apps/Skills';
 import Achievements from '@/components/portfolio/apps/Achievements';
-import LearningStatement from '@/components/portfolio/apps/LearningStatement';
 import Contact from '@/components/portfolio/apps/Contact';
 import type { App } from './types';
 
@@ -23,7 +22,6 @@ export type AppID =
   | 'projects'
   | 'skills'
   | 'achievements'
-  | 'learning'
   | 'contact'
   | 'github'
   | 'show-apps';
@@ -52,12 +50,6 @@ export const apps: Record<AppID, App> = {
     title: '実績 (Achievements)',
     icon: <Award className="size-10 text-yellow-400" />,
     content: <Achievements />,
-  },
-  learning: {
-    id: 'learning',
-    title: '学習方針ジェネレーター',
-    icon: <BrainCircuit className="size-10 text-purple-400" />,
-    content: <LearningStatement />,
   },
   contact: {
     id: 'contact',
