@@ -24,7 +24,7 @@ const FishEasterEgg = () => {
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.scale(4, 4);
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 0.5;
     
     // Tail fin (animated)
     ctx.save();
