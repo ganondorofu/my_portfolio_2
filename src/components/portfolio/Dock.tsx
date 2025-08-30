@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 interface DockApp {
   id: AppID;
@@ -16,20 +17,28 @@ interface DockApp {
 interface DockProps {
   apps: DockApp[];
   onAppClick: (id: AppID) => void;
+  activeApp: AppID | null;
 }
 
-export default function Dock({ apps, onAppClick }: DockProps) {
+export default function Dock({ apps, onAppClick, activeApp }: DockProps) {
   return (
     <TooltipProvider>
-      <aside className="flex w-16 shrink-0 flex-col items-center gap-4 bg-black/50 p-2">
+      <aside className="flex w-16 shrink-0 flex-col items-center gap-2 bg-black/30 p-2">
         {apps.map((app) => (
           <Tooltip key={app.id}>
             <TooltipTrigger asChild>
               <button
                 onClick={() => onAppClick(app.id)}
-                className="rounded-lg p-2 text-white transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50"
+                className={cn(
+                  'relative flex h-12 w-12 items-center justify-center rounded-lg text-white transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
+                  'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
+                  app.id === activeApp ? 'bg-white/20' : 'bg-white/10'
+                )}
                 aria-label={`Open ${app.title}`}
               >
+                {app.id === activeApp && (
+                  <span className="absolute left-0 top-1/2 h-4 w-1 -translate-y-1/2 rounded-r-full bg-primary"></span>
+                )}
                 {app.icon}
               </button>
             </TooltipTrigger>

@@ -112,7 +112,11 @@ export default function Home() {
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-headline">
       <Header />
       <div className="flex flex-1">
-        <Dock apps={dockApps.map((id) => apps[id])} onAppClick={openApp} />
+        <Dock 
+          apps={dockApps.map((id) => apps[id])} 
+          onAppClick={openApp}
+          activeApp={activeApp}
+        />
         <main className="flex-1 p-4 md:p-8">
           <div className="grid h-full grid-cols-2 grid-rows-4 items-start justify-start gap-4">
             {desktopApps.map((id) => (
