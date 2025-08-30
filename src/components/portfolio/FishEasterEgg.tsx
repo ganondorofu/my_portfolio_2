@@ -21,7 +21,7 @@ const FishEasterEgg = () => {
 
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.scale(8, 8); // Scale up the drawing
+    ctx.scale(4, 4); // Scale up the drawing
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 1.5;
     
@@ -119,8 +119,8 @@ const FishEasterEgg = () => {
     const centerY = canvas.height / 2;
     
     // Simple bounding box check for the fish body, adjusted for scale
-    const scaledWidth = fishWidth * 1.2 * 8; // Adjust for scale
-    const scaledHeight = fishHeight * 1.2 * 8; // Adjust for scale
+    const scaledWidth = fishWidth * 1.2 * 4; // Adjust for scale
+    const scaledHeight = fishHeight * 1.2 * 4; // Adjust for scale
 
     if (
       x > centerX - scaledWidth / 2 &&
