@@ -83,7 +83,7 @@ export default function Profile() {
   }, [showOutput]);
 
   return (
-    <div className="font-code text-sm p-4 bg-[#300A24] text-white rounded-lg">
+    <div className="font-code text-sm text-white rounded-lg">
       <CommandLine>{command}<span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span></CommandLine>
       
       {showOutput && (

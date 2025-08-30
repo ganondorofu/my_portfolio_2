@@ -51,7 +51,11 @@ export default function Home() {
       </div>
 
       {activeApp && apps[activeApp] && (
-        <AppWindow title={apps[activeApp].title} onClose={closeApp}>
+        <AppWindow 
+          appId={activeApp}
+          title={apps[activeApp].title} 
+          onClose={closeApp}
+        >
           {apps[activeApp].content}
         </AppWindow>
       )}
