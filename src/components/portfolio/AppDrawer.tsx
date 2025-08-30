@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
 import type { AppID } from '@/lib/apps';
 import Link from 'next/link';
+import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppManager } from '@/hooks/useAppManager';
 
 interface DrawerApp {
   id: AppID;
   title: string;
-  icon: ReactNode;
+  icon: keyof typeof LucideIcons;
+  iconColor?: string;
   externalUrl?: string;
 }
 
@@ -16,6 +18,12 @@ interface AppDrawerProps {
   onClose: () => void;
   apps: DrawerApp[];
 }
+
+const Icon = ({ name, className }: { name: keyof typeof LucideIcons; className?: string }) => {
+  const LucideIcon = LucideIcons[name];
+  if (!LucideIcon) return null;
+  return <LucideIcon className={cn('size-10', className)} />;
+};
 
 export default function AppDrawer({ isOpen, onClose, apps }: AppDrawerProps) {
   const { openApp } = useAppManager();
@@ -45,7 +53,7 @@ export default function AppDrawer({ isOpen, onClose, apps }: AppDrawerProps) {
                 className="flex flex-col items-center justify-center gap-2 text-white transition-transform hover:scale-110 focus:outline-none"
               >
                 <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-black/40">
-                  {app.icon}
+                  <Icon name={app.icon} className={cn('size-10', app.iconColor)} />
                 </div>
                 <span className="w-full truncate text-center text-xs font-medium">
                   {app.title}

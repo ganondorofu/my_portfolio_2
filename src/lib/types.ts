@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon, LucideProps } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { AppID } from './apps';
 
@@ -47,7 +47,8 @@ export interface Achievement {
 export interface App {
   id: AppID;
   title: string;
-  icon: ReactNode;
+  icon: keyof typeof import('lucide-react');
+  iconColor?: string;
   content?: ReactNode;
   externalUrl?: string;
 }

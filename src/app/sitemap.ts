@@ -5,7 +5,7 @@ import { apps } from '@/lib/apps';
 
 const siteUrl = 'https://komeniki.net';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appRoutes = Object.values(apps)
     .filter(app => !app.externalUrl)
     .map((app) => ({

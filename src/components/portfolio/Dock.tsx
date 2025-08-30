@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 import type { AppID } from '@/lib/apps';
+import * as LucideIcons from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -15,13 +16,20 @@ import { useAppManager } from '@/hooks/useAppManager';
 interface DockApp {
   id: AppID;
   title: string;
-  icon: ReactNode;
+  icon: keyof typeof LucideIcons;
+  iconColor?: string;
   externalUrl?: string;
 }
 
 interface DockProps {
   apps: DockApp[];
   showAppsButton: DockApp;
+}
+
+const Icon = ({ name, className }: { name: keyof typeof LucideIcons; className?: string }) => {
+  const LucideIcon = LucideIcons[name];
+  if (!LucideIcon) return null;
+  return <LucideIcon className={cn('size-10', className)} />;
 }
 
 export default function Dock({ apps, showAppsButton }: DockProps) {
@@ -50,7 +58,7 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
 
     const buttonContent = (
       <>
-        {app.icon}
+        <Icon name={app.icon} className={cn(app.id === 'show-apps' ? 'size-9' : 'size-10', app.iconColor)} />
         {isAppOpen(app.id) && !isSpecialButton && (
           <span className={cn(
             "absolute bottom-0 h-1 w-4 rounded-full",
