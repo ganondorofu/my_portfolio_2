@@ -1,4 +1,3 @@
-'use server';
 import type { App } from './types';
 
 export type AppID =
