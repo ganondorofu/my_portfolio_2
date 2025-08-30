@@ -1,9 +1,7 @@
 'use client';
 
 import Clock from './Clock';
-import ThemeToggle from './ThemeToggle';
-import { profileData } from '@/lib/data';
-import { Wifi, Volume2, Power } from 'lucide-react';
+import SystemMenu from './SystemMenu';
 
 export default function Header() {
   return (
@@ -12,12 +10,8 @@ export default function Header() {
       <div className="flex w-1/3 justify-center">
         <Clock />
       </div>
-      <div className="flex w-1/3 items-center justify-end gap-3">
-        <ThemeToggle />
-        {/* These are decorative icons */}
-        <Wifi className="h-4 w-4" />
-        <Volume2 className="h-4 w-4" />
-        <Power className="h-4 w-4" />
+      <div className="flex w-1/3 items-center justify-end">
+        <SystemMenu />
       </div>
     </header>
   );
