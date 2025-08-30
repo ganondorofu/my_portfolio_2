@@ -61,15 +61,9 @@ export default function LoginScreen({ onLoginComplete }: LoginScreenProps) {
       <LoginHeader />
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex w-80 flex-col items-center gap-4">
-          <Image
-            src="https://picsum.photos/128/128"
-            alt="User Avatar"
-            width={128}
-            height={128}
-            data-ai-hint="avatar user"
-            className="rounded-full"
-            priority
-          />
+          <div className="flex h-32 w-32 items-center justify-center rounded-full bg-black/30">
+            <User className="h-20 w-20 text-gray-400" />
+          </div>
           <h1 className="text-2xl font-medium">{profileData.name}</h1>
           <form
             className="relative w-full"
