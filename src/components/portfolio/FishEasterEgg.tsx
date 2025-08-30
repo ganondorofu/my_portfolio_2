@@ -88,7 +88,7 @@ const FishEasterEgg = () => {
       animationStartTime.current = performance.now();
       const animate = (time: number) => {
         const elapsedTime = time - animationStartTime.current;
-        if (elapsedTime > 500) { // Animate for 500ms
+        if (elapsedTime > 1000) { // Animate for 1000ms
           setIsAnimating(false);
           drawFish(0, 0); 
           return;
