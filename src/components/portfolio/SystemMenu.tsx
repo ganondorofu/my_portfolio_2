@@ -8,16 +8,13 @@ import {
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import ThemeToggle from './ThemeToggle';
 import ShutdownDialog from './ShutdownDialog';
 import {
-  Wifi,
   Volume2,
   Power,
   Camera,
   Network,
   ChevronRight,
-  Battery,
   Moon,
   Sun,
 } from 'lucide-react';
@@ -43,7 +40,7 @@ export default function SystemMenu() {
             variant="ghost"
             className="flex h-auto items-center justify-end gap-3 rounded-none p-1 hover:bg-white/20"
           >
-            <Wifi className="h-4 w-4" />
+            <Network className="h-4 w-4" />
             <Volume2 className="h-4 w-4" />
             <Power className="h-4 w-4" />
           </Button>

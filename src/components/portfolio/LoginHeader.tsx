@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Wifi, Volume2, Power } from 'lucide-react';
+import { Network, Volume2, Power } from 'lucide-react';
 
 export default function LoginHeader() {
   const [dateTime, setDateTime] = useState('');
@@ -34,7 +34,7 @@ export default function LoginHeader() {
       <div className="w-1/3 text-center">{dateTime}</div>
       <div className="flex w-1/3 justify-end items-center gap-3">
         {/* These are decorative icons */}
-        <Wifi className="h-4 w-4" />
+        <Network className="h-4 w-4" />
         <Volume2 className="h-4 w-4" />
         <Power className="h-4 w-4" />
       </div>
