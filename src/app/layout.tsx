@@ -3,9 +3,40 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import './globals.css';
 
+const siteUrl = 'https://komeniki.net';
+
 export const metadata: Metadata = {
-  title: 'yoneyone Portfolio',
-  description: 'yoneyone (ganondorofu) - Student / Hobbyist Developer Portfolio',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'yoneyone Portfolio',
+    template: `%s | yoneyone Portfolio`,
+  },
+  description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。制作したプロジェクト、スキル、実績などを紹介しています。',
+  keywords: ['yoneyone', 'ganondorofu', 'portfolio', 'ポートフォリオ', '学生', '開発者', 'React', 'TypeScript', 'Next.js'],
+  authors: [{ name: 'yoneyone', url: siteUrl }],
+  creator: 'yoneyone',
+  openGraph: {
+    type: 'website',
+    url: siteUrl,
+    title: 'yoneyone Portfolio',
+    description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
+    siteName: 'yoneyone Portfolio',
+    images: [
+      {
+        url: `${siteUrl}/ogp.png`,
+        width: 1200,
+        height: 630,
+        alt: 'yoneyone Portfolio OGP Image',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@ganondorofu_sub',
+    title: 'yoneyone Portfolio',
+    description: 'yoneyone (ganondorofu) - 学生 / ホビイスト開発者としてのポートフォリオサイト。',
+    images: [`${siteUrl}/ogp.png`],
+  },
 };
 
 export default function RootLayout({
