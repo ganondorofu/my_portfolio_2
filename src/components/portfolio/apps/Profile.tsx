@@ -51,65 +51,54 @@ const allOutputLines: ReactNode[] = [
 let hasAnimatedInSession = false;
 
 export default function Profile() {
-  const [animationCompleted, setAnimationCompleted] = useState(hasAnimatedInSession);
   const [command, setCommand] = useState(hasAnimatedInSession ? 'cat ./profile.md' : '');
   const [outputLines, setOutputLines] = useState<ReactNode[]>(hasAnimatedInSession ? allOutputLines : []);
-  const [showOutput, setShowOutput] = useState(hasAnimatedInSession);
-  
-  const fullCommand = `cat ./profile.md`;
+  const [isAnimating, setIsAnimating] = useState(!hasAnimatedInSession);
 
   useEffect(() => {
-    if (animationCompleted) {
+    if (hasAnimatedInSession) {
       return;
     }
 
+    const fullCommand = 'cat ./profile.md';
     let i = 0;
     const typing = setInterval(() => {
       setCommand(fullCommand.slice(0, i + 1));
       i++;
-      if (i >= fullCommand.length) {
+      if (i > fullCommand.length) {
         clearInterval(typing);
-        setTimeout(() => setShowOutput(true), 150);
+        
+        let j = 0;
+        const displayOutput = setInterval(() => {
+          setOutputLines(prev => [...prev, allOutputLines[j]]);
+          j++;
+          if (j >= allOutputLines.length) {
+            clearInterval(displayOutput);
+            hasAnimatedInSession = true;
+            setIsAnimating(false);
+          }
+        }, 50);
       }
     }, 50);
 
-    return () => clearInterval(typing);
-  }, [fullCommand, animationCompleted]);
-
-  useEffect(() => {
-    if (animationCompleted || !showOutput) {
-      return;
-    }
-    
-    let i = 0;
-    const displayOutput = setInterval(() => {
-      setOutputLines(prev => [...prev, allOutputLines[i]]);
-      i++;
-      if (i >= allOutputLines.length) {
-        clearInterval(displayOutput);
-        hasAnimatedInSession = true;
-        setAnimationCompleted(true);
-      }
-    }, 50);
-
-    return () => clearInterval(displayOutput);
-  }, [showOutput, animationCompleted]);
-
-  const isAnimationRunning = !animationCompleted;
+    return () => {
+      clearInterval(typing);
+    };
+  }, []);
 
   return (
     <div className="font-code text-sm text-white rounded-lg">
       <CommandLine>
         {command}
-        {isAnimationRunning && <span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span>}
+        {isAnimating && <span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span>}
       </CommandLine>
       
-      {showOutput && (
+      {outputLines.length > 0 && (
         <div className="mt-4 space-y-2 text-gray-300">
           {outputLines.map((line, index) => (
             <div key={index}>{line}</div>
           ))}
-          {!isAnimationRunning && (
+          {!isAnimating && (
              <CommandLine><span className="inline-block w-2 h-4 bg-white animate-pulse ml-1"></span></CommandLine>
           )}
         </div>
