@@ -32,13 +32,13 @@ export const apps: Record<AppID, App> = {
   profile: {
     id: 'profile',
     title: 'プロフィール (Profile)',
-    icon: <User className="size-8 text-blue-400" />,
+    icon: <User className="size-8 text-sky-400" />,
     content: <Profile />,
   },
   projects: {
     id: 'projects',
     title: 'プロジェクト (Projects)',
-    icon: <Folder className="size-8 text-orange-400" />,
+    icon: <Folder className="size-8 text-amber-500" />,
     content: <Projects />,
   },
   skills: {
@@ -62,18 +62,18 @@ export const apps: Record<AppID, App> = {
   contact: {
     id: 'contact',
     title: 'お問い合わせ (Contact)',
-    icon: <Mail className="size-8 text-green-400" />,
+    icon: <Mail className="size-8 text-lime-500" />,
     content: <Contact />,
   },
   github: {
     id: 'github',
     title: 'GitHub',
-    icon: <Github className="size-8 text-gray-400" />,
+    icon: <Github className="size-8 text-neutral-400" />,
     externalUrl: 'https://github.com/ganondorofu',
   },
   'show-apps': {
     id: 'show-apps',
     title: 'Show Applications',
-    icon: <Grid3x3 className="size-7 text-white" />,
+    icon: <Grid3x3 className="size-7 text-rose-500" />,
   },
 };
