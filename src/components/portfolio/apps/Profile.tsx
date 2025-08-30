@@ -48,8 +48,6 @@ const allOutputLines: ReactNode[] = [
   )),
 ];
 
-// Use a state at the module level to track if the animation has run once per session.
-// This is a simple approach; for more complex apps, consider React Context or a state management library.
 let hasAnimatedInSession = false;
 
 export default function Profile() {
