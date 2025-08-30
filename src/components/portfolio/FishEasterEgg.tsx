@@ -8,8 +8,8 @@ const FishEasterEgg = () => {
   const animationFrameId = useRef<number>();
   const animationStartTime = useRef<number>(0);
 
-  const fishWidth = 120;
-  const fishHeight = 80;
+  const fishWidth = 240;
+  const fishHeight = 160;
 
   const drawFish = (tailAngle = 0) => {
     const canvas = canvasRef.current;
@@ -21,8 +21,9 @@ const FishEasterEgg = () => {
 
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(2, 2); // Scale up the drawing
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1.5;
     
     // Body
     ctx.beginPath();
@@ -36,7 +37,7 @@ const FishEasterEgg = () => {
     
     // Eye
     ctx.beginPath();
-    ctx.arc(-35, -2, 3, 0, Math.PI * 2);
+    ctx.arc(-35, -2, 1.5, 0, Math.PI * 2);
     ctx.fillStyle = 'white';
     ctx.fill();
 
@@ -78,6 +79,7 @@ const FishEasterEgg = () => {
 
   useEffect(() => {
     drawFish();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -102,6 +104,7 @@ const FishEasterEgg = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAnimating]);
 
   const handleClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -115,12 +118,15 @@ const FishEasterEgg = () => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     
-    // Simple bounding box check for the fish body
+    // Simple bounding box check for the fish body, adjusted for scale
+    const scaledWidth = fishWidth * 1.2; // Use a slightly larger hitbox
+    const scaledHeight = fishHeight * 1.2;
+
     if (
-      x > centerX - fishWidth / 2 &&
-      x < centerX + fishWidth / 2 &&
-      y > centerY - fishHeight / 2 &&
-      y < centerY + fishHeight / 2
+      x > centerX - scaledWidth / 2 &&
+      x < centerX + scaledWidth / 2 &&
+      y > centerY - scaledHeight / 2 &&
+      y < centerY + scaledHeight / 2
     ) {
       setIsAnimating(true);
     }
@@ -129,8 +135,8 @@ const FishEasterEgg = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={fishWidth + 60}
-      height={fishHeight + 60}
+      width={fishWidth + 120} 
+      height={fishHeight + 120}
       onClick={handleClick}
       className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-0"
       style={{ imageRendering: 'pixelated' }}
