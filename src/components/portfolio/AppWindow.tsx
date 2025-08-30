@@ -33,7 +33,7 @@ export default function AppWindow({ appId, title, children }: AppWindowProps) {
   }, [appId]);
 
   const handleClose = () => {
-    router.push('/');
+    router.push('/desktop');
   }
 
   const handleMaximize = () => {

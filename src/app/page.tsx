@@ -12,7 +12,7 @@ function Home() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace('/profile');
+      router.replace('/desktop');
     }
   }, [isLoggedIn, router]);
 
