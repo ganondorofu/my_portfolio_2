@@ -58,7 +58,6 @@ export default function Home() {
     }
   }, [activeApp, isDrawerOpen]);
 
-
   const apps: Record<AppID, App> = useMemo(
     () => ({
       profile: {
@@ -142,7 +141,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-background font-headline">
+    <div className="desktop-background flex h-screen w-screen flex-col overflow-hidden font-headline">
       <Header />
       <div className="flex flex-1">
         <Dock 
@@ -151,7 +150,7 @@ export default function Home() {
           onAppClick={openApp}
           activeApp={activeApp}
         />
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1">
           {/* Desktop icons removed for a cleaner look */}
         </main>
       </div>

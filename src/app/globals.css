@@ -68,6 +68,13 @@
   }
 }
 
+.desktop-background {
+  background-image: url('https://picsum.photos/1920/1080');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 @layer utilities {
   .window-content-scrollbar::-webkit-scrollbar {
     width: 8px;
