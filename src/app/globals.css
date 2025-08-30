@@ -69,7 +69,7 @@
 }
 
 .desktop-background {
-  background-image: url('/ubuntu_background.png');
+  background: linear-gradient(135deg, #2C001E, #772953, #E95420);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
