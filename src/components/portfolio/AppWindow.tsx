@@ -49,8 +49,8 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     maximized: 'h-full w-full max-w-full',
   };
   
-  const cardBgClass = isTerminal ? 'bg-[#300A24]/95' : 'bg-card/80';
-  const headerBgClass = isTerminal ? 'bg-black/50' : 'bg-card/90';
+  const cardBgClass = isTerminal ? 'bg-[#300A24]/95' : 'bg-card';
+  const headerBgClass = isTerminal ? 'bg-black/50' : 'bg-muted/40';
   const textColorClass = isTerminal ? 'text-white/80' : 'text-card-foreground';
   const contentPadding = isTerminal ? 'p-0' : 'p-6';
 
@@ -58,7 +58,7 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
     <div
       className={cn(
         "absolute inset-0 z-40 flex items-center justify-center transition-all duration-300 ease-in-out",
-        !isTerminal && "bg-black/30 backdrop-blur-sm",
+        isTerminal && "bg-black/30 backdrop-blur-sm",
         windowState === 'maximized' ? 'p-0' : 'p-4 md:p-8'
       )}
       onClick={onClose}
@@ -68,7 +68,8 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
           "flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ease-in-out",
           windowSizeClasses[windowState],
           cardBgClass,
-          windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg border-2 border-primary/50 backdrop-blur-xl'
+          windowState === 'maximized' ? 'rounded-none border-0' : 'rounded-lg',
+          isTerminal ? 'border-2 border-primary/50 backdrop-blur-xl' : 'border'
         )}
         onClick={(e) => e.stopPropagation()}
       >
