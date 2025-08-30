@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import {
   User,
-  FolderGit2,
+  Folder,
   Wrench,
   Award,
   BrainCircuit,
@@ -71,7 +71,7 @@ export default function Home() {
       projects: {
         id: 'projects',
         title: 'プロジェクト (Projects)',
-        icon: <FolderGit2 className="size-8" />,
+        icon: <Folder className="size-8" />,
         content: <Projects />,
       },
       skills: {
