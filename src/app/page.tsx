@@ -6,6 +6,7 @@ import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import AppWindow from '@/components/portfolio/AppWindow';
 import LoginScreen from '@/components/portfolio/LoginScreen';
+import FishEasterEgg from '@/components/portfolio/FishEasterEgg';
 import { useAppManager } from '@/hooks/useAppManager';
 
 export default function Home() {
@@ -49,6 +50,7 @@ export default function Home() {
           minimizedApps={minimizedApps}
         />
         <main className="relative flex-1">
+           <FishEasterEgg />
           {activeApp && apps[activeApp] && (
             <AppWindow 
               appId={activeApp}
