@@ -8,6 +8,13 @@ export function useAppManager() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    // Open the profile app by default once logged in
+    if (isLoggedIn) {
+      setActiveApp('profile');
+    }
+  }, [isLoggedIn]);
+
   const apps = useMemo(() => appConfig, []);
   
   const allApps = useMemo(
