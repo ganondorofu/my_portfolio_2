@@ -31,10 +31,10 @@ const FishEasterEgg = () => {
     ctx.translate(47.5, 0); // Position at the base of the tail
     ctx.rotate(tailAngle);
     ctx.beginPath();
-    ctx.moveTo(0, -25); // Corresponds to tail top join
-    ctx.lineTo(20, -10);
-    ctx.moveTo(20, 10);
-    ctx.lineTo(0, 25); // Corresponds to tail bottom join
+    ctx.moveTo(0, -25);
+    ctx.lineTo(25, -15);
+    ctx.lineTo(25, 15);
+    ctx.lineTo(0, 25);
     ctx.stroke();
     ctx.restore();
     
@@ -92,7 +92,7 @@ const FishEasterEgg = () => {
           drawFish(0); 
           return;
         }
-        const angle = Math.sin(elapsedTime / 40) * 0.4; // Flapping motion
+        const angle = Math.sin(elapsedTime / 50) * 0.8; // Flapping motion
         drawFish(angle);
         animationFrameId.current = requestAnimationFrame(animate);
       };
