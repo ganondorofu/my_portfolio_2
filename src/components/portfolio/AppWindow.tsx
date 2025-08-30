@@ -39,7 +39,7 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
   };
 
   const handleMinimize = () => {
-    // Minimizing logic would go here. For now, we'll just log it.
+    // Minimizing logic is not implemented yet, so this is disabled.
     console.log('Minimize clicked');
     // setWindowState('minimized');
   };
@@ -76,44 +76,44 @@ export default function AppWindow({ appId, title, onClose, children }: AppWindow
           "flex flex-row items-center justify-between space-y-0 p-2 pl-4",
           headerBgClass
         )}>
-          <div className="flex items-center gap-2">
-            <Button
+           {/* Empty div to balance the flex layout */}
+          <div className="w-1/3"></div>
+           <h3 className={cn("w-1/3 text-center font-bold text-sm", textColorClass)}>
+            {title}
+          </h3>
+          <div className="flex w-1/3 items-center justify-end gap-2">
+             <Button
               variant="ghost"
               size="icon"
-              className="size-3 rounded-full bg-red-500 hover:bg-red-600"
-              onClick={onClose}
-            >
-              <X className="size-2 opacity-0 transition-opacity group-hover:opacity-100" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-3 rounded-full bg-yellow-500 hover:bg-yellow-600"
+              className="size-6 rounded-full bg-white/10 hover:bg-white/20"
               onClick={handleMinimize}
               disabled // Minimization not fully implemented
             >
-               <Minus className="size-2 opacity-0 transition-opacity group-hover:opacity-100" />
+               <Minus className="size-4" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="size-3 rounded-full bg-green-500 hover:bg-green-600"
+              className="size-6 rounded-full bg-white/10 hover:bg-white/20"
               onClick={handleMaximize}
             >
-               <Square className="size-2 opacity-0 transition-opacity group-hover:opacity-100" />
+               <Square className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-6 rounded-full bg-white/10 hover:bg-red-600/50"
+              onClick={onClose}
+            >
+              <X className="size-4" />
             </Button>
           </div>
-           <h3 className={cn("font-bold text-sm absolute left-1/2 -translate-x-1/2", textColorClass)}>
-            {title}
-          </h3>
-          {/* Empty div to balance the flex layout */}
-          <div></div>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-0">
           <ScrollArea className="h-full w-full window-content-scrollbar">
             <div className={cn(
               "h-full",
-               windowState === 'maximized' && isTerminal ? 'p-4' : contentPadding
+              isTerminal ? 'p-4' : contentPadding
             )}>
               {children}
             </div>
