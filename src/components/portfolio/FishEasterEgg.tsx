@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
@@ -25,13 +26,25 @@ const FishEasterEgg = () => {
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 1.5;
     
+    // Tail fin (animated)
+    ctx.save();
+    ctx.translate(47.5, 0); // Position at the base of the tail
+    ctx.rotate(tailAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, -25); // Corresponds to tail top join
+    ctx.lineTo(20, -10);
+    ctx.moveTo(20, 10);
+    ctx.lineTo(0, 25); // Corresponds to tail bottom join
+    ctx.stroke();
+    ctx.restore();
+    
     // Body
     ctx.beginPath();
     ctx.moveTo(-50, 0); // nose
     ctx.quadraticCurveTo(0, -40, 40, -20); // top
-    ctx.lineTo(55, -30); // tail top start
-    ctx.lineTo(55, 30); // tail bottom end
-    ctx.lineTo(40, 20); // tail bottom join
+    ctx.lineTo(47.5, -25); // tail top join
+    ctx.moveTo(47.5, 25); // tail bottom join
+    ctx.lineTo(40, 20); // back to body
     ctx.quadraticCurveTo(0, 40, -50, 0); // bottom
     ctx.stroke();
     
@@ -60,19 +73,6 @@ const FishEasterEgg = () => {
     ctx.lineTo(-5, 32);
     ctx.lineTo(5, 18);
     ctx.stroke();
-    
-    // Tail fin details with animation
-    ctx.save();
-    ctx.translate(55, 0); 
-    ctx.rotate(tailAngle);
-    ctx.beginPath();
-    ctx.moveTo(0, -30);
-    ctx.lineTo(20, -10);
-    ctx.moveTo(20, 10);
-    ctx.lineTo(0, 30);
-    ctx.stroke();
-    ctx.restore();
-
 
     ctx.restore();
   };
