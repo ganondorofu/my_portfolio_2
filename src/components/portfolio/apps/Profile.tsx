@@ -48,16 +48,22 @@ const allOutputLines: ReactNode[] = [
   )),
 ];
 
-let animationCompleted = false;
+// Use a state at the module level to track if the animation has run once per session.
+// This is a simple approach; for more complex apps, consider React Context or a state management library.
+let hasAnimatedInSession = false;
 
 export default function Profile() {
-  const [command, setCommand] = useState(animationCompleted ? `cat ./profile.md` : '');
-  const [showOutput, setShowOutput] = useState(animationCompleted);
-  const [outputLines, setOutputLines] = useState<ReactNode[]>(animationCompleted ? allOutputLines : []);
+  const [animationCompleted, setAnimationCompleted] = useState(hasAnimatedInSession);
+  const [command, setCommand] = useState(hasAnimatedInSession ? 'cat ./profile.md' : '');
+  const [outputLines, setOutputLines] = useState<ReactNode[]>(hasAnimatedInSession ? allOutputLines : []);
+  const [showOutput, setShowOutput] = useState(hasAnimatedInSession);
+  
   const fullCommand = `cat ./profile.md`;
 
   useEffect(() => {
-    if (animationCompleted) return;
+    if (animationCompleted) {
+      return;
+    }
 
     let i = 0;
     const typing = setInterval(() => {
@@ -68,11 +74,14 @@ export default function Profile() {
         setTimeout(() => setShowOutput(true), 150);
       }
     }, 50);
+
     return () => clearInterval(typing);
-  }, [fullCommand]);
+  }, [fullCommand, animationCompleted]);
 
   useEffect(() => {
-    if (animationCompleted || !showOutput) return;
+    if (animationCompleted || !showOutput) {
+      return;
+    }
     
     let i = 0;
     const displayOutput = setInterval(() => {
@@ -80,11 +89,13 @@ export default function Profile() {
       i++;
       if (i >= allOutputLines.length) {
         clearInterval(displayOutput);
-        animationCompleted = true;
+        hasAnimatedInSession = true;
+        setAnimationCompleted(true);
       }
-    }, 50); // Faster line-by-line output
+    }, 50);
+
     return () => clearInterval(displayOutput);
-  }, [showOutput]);
+  }, [showOutput, animationCompleted]);
 
   const isAnimationRunning = !animationCompleted;
 
