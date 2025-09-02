@@ -134,17 +134,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     router.replace('/');
   };
 
-  useEffect(() => {
-    const appIdFromUrl = params.appId as AppID;
-    if (isLoggedIn && appIdFromUrl && appConfig[appIdFromUrl] && !appConfig[appIdFromUrl].externalUrl) {
-      const isAlreadyOpen = openWindows.some(w => w.id === appIdFromUrl);
-      if (!isAlreadyOpen) {
-        openApp(appIdFromUrl);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.appId, isLoggedIn]);
-
   const contextValue: AppManagerContextType = {
     openWindows,
     activeAppId,
