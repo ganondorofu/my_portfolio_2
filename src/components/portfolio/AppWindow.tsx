@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Minus, Square } from 'lucide-react';
@@ -28,17 +28,17 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   const isMobile = useIsMobile();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: 800, height: 600 });
+  const nodeRef = useRef(null);
 
   useEffect(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     // Center new windows with a slight offset
+    const openWindows = document.querySelectorAll('[data-window-id]');
     const xOffset = (openWindows.length % 5) * 30;
     const yOffset = (openWindows.length % 5) * 30;
     
     setPosition({ x: vw / 2 - size.width / 2 + xOffset, y: vh / 2 - size.height / 2 + yOffset});
-    // This is a hacky way to get the number of open windows, it should be passed from provider
-    const openWindows = document.querySelectorAll('[data-window-id]');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appId]);
   
@@ -144,12 +144,14 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
 
   return (
     <Draggable
+      nodeRef={nodeRef}
       handle=".cursor-move"
       defaultPosition={position}
       onStop={handleDragStop}
       cancel=".no-drag"
     >
       <ResizableBox
+        ref={nodeRef}
         height={size.height}
         width={size.width}
         onResizeStop={onResizeStop}
