@@ -1,3 +1,4 @@
+
 'use client';
 
 import { ReactNode, useState, useEffect, useRef } from 'react';
@@ -85,7 +86,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
              <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default"
+              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default no-drag"
               onClick={() => minimizeApp(appId)}
             >
                <Minus className="size-3 text-white" />
@@ -94,7 +95,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
               <Button
                 variant="ghost"
                 size="icon"
-                className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default"
+                className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default no-drag"
                 onClick={() => toggleMaximize(appId)}
               >
                 <Square className="size-3 text-white" />
@@ -103,7 +104,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
             <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-red-500 hover:bg-red-600 !cursor-default"
+              className="size-6 rounded-full bg-red-500 hover:bg-red-600 !cursor-default no-drag"
               onClick={() => closeApp(appId)}
             >
               <X className="size-4 text-white" />
@@ -146,24 +147,24 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     <Draggable
       nodeRef={nodeRef}
       handle=".cursor-move"
-      defaultPosition={position}
+      position={position}
       onStop={handleDragStop}
       cancel=".no-drag"
     >
-      <ResizableBox
-        ref={nodeRef}
-        height={size.height}
-        width={size.width}
-        onResizeStop={onResizeStop}
-        minConstraints={[300, 200]}
-        maxConstraints={[1200, 900]}
-        className="absolute"
-        style={{ zIndex: windowState.zIndex }}
-      >
-        <div className="w-full h-full">
-          {windowContent}
-        </div>
-      </ResizableBox>
+        <ResizableBox
+            ref={nodeRef}
+            height={size.height}
+            width={size.width}
+            onResizeStop={onResizeStop}
+            minConstraints={[300, 200]}
+            maxConstraints={[1200, 900]}
+            className="absolute"
+            style={{ zIndex: windowState.zIndex }}
+        >
+            <div className="w-full h-full">
+            {windowContent}
+            </div>
+        </ResizableBox>
     </Draggable>
   );
 }
