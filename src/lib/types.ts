@@ -52,3 +52,10 @@ export interface App {
   content?: ReactNode;
   externalUrl?: string;
 }
+
+export interface WindowState {
+  id: AppID;
+  isMinimized: boolean;
+  isMaximized: boolean;
+  zIndex: number;
+}

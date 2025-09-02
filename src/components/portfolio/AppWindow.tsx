@@ -1,4 +1,3 @@
-
 'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
@@ -8,72 +7,75 @@ import { X, Minus, Square } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import type { AppID } from '@/lib/apps';
+import type { WindowState } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useRouter } from 'next/navigation';
 import { useAppManager } from '@/hooks/useAppManager';
+import Draggable from 'react-draggable';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
+
 
 interface AppWindowProps {
-  appId: AppID | null;
+  appId: AppID;
   title: string;
   children: ReactNode;
+  windowState: WindowState;
 }
 
-type WindowState = 'default' | 'maximized';
-
-export default function AppWindow({ appId, title, children }: AppWindowProps) {
-  const router = useRouter();
-  const { minimizeApp } = useAppManager();
+export default function AppWindow({ appId, title, children, windowState }: AppWindowProps) {
+  const { closeApp, minimizeApp, toggleMaximize, focusApp, activeAppId } = useAppManager();
   const isTerminal = appId === 'profile';
-  const [windowState, setWindowState] = useState<WindowState>('default');
   const isMobile = useIsMobile();
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [size, setSize] = useState({ width: 800, height: 600 });
 
-  // Reset window state when app changes
   useEffect(() => {
-    setWindowState('default');
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Center new windows with a slight offset
+    const xOffset = (openWindows.length % 5) * 30;
+    const yOffset = (openWindows.length % 5) * 30;
+    
+    setPosition({ x: vw / 2 - size.width / 2 + xOffset, y: vh / 2 - size.height / 2 + yOffset});
+    // This is a hacky way to get the number of open windows, it should be passed from provider
+    const openWindows = document.querySelectorAll('[data-window-id]');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appId]);
-
-  const handleClose = () => {
-    router.push('/desktop');
-  }
-
-  const handleMaximize = () => {
-    setWindowState(current => (current === 'maximized' ? 'default' : 'maximized'));
+  
+  const handleDragStop = (e: any, data: any) => {
+    setPosition({ x: data.x, y: data.y });
   };
   
-  const handleMinimize = () => {
-    if(appId) {
-      minimizeApp(appId);
-    }
+  const onResizeStop = (e: any, data: any) => {
+    setSize({ width: data.size.width, height: data.size.height });
   };
 
-  const windowSizeClasses = {
-    default: 'h-[90vh] md:w-[90vw] w-screen max-w-4xl',
-    maximized: 'h-full w-full',
-  };
-  
+  const isMaximized = isMobile || windowState.isMaximized;
+  const isActive = activeAppId === appId;
+
   const cardBgClass = isTerminal ? 'bg-[#300A24]/95 backdrop-blur-xl' : 'bg-card';
   const headerBgClass = isTerminal ? 'bg-black/50' : 'bg-muted/40';
   const textColorClass = isTerminal ? 'text-white/80' : 'text-card-foreground';
   const contentPadding = isTerminal ? 'p-0' : 'p-4 md:p-6';
 
-  return (
-    <div
-      className={cn(
-        "absolute inset-0 z-30 flex items-center justify-center transition-all ease-in-out",
-        windowState === 'maximized' || isMobile ? 'p-0' : 'p-4 md:p-8'
-      )}
-    >
+  if (windowState.isMinimized) {
+    return null;
+  }
+
+  const windowContent = (
       <Card
+        data-window-id={appId}
+        onMouseDown={() => focusApp(appId)}
         className={cn(
-          "flex flex-col overflow-hidden shadow-2xl transition-[width,height] ease-in-out",
-          (isMobile || windowState === 'maximized') ? windowSizeClasses.maximized : windowSizeClasses.default,
-          cardBgClass,
-          (isMobile || windowState === 'maximized') ? 'rounded-none border-0' : 'rounded-lg',
-          isTerminal ? 'border-2 border-primary/50' : 'border'
+          "flex flex-col overflow-hidden shadow-2xl w-full h-full",
+          isMaximized ? 'rounded-none border-0' : 'rounded-lg',
+          isTerminal ? 'border-2 border-primary/50' : 'border',
+          isActive ? 'shadow-primary/50' : 'shadow-black/50',
+          cardBgClass
         )}
       >
         <CardHeader className={cn(
-          "flex flex-row items-center justify-between space-y-0 p-2 pl-4",
+          "flex flex-row items-center justify-between space-y-0 p-2 pl-4 cursor-move",
           headerBgClass
         )}>
           <h3 className={cn("font-bold text-sm", textColorClass)}>
@@ -83,24 +85,26 @@ export default function AppWindow({ appId, title, children }: AppWindowProps) {
              <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700"
-              onClick={handleMinimize}
+              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default"
+              onClick={() => minimizeApp(appId)}
             >
                <Minus className="size-3 text-white" />
             </Button>
+            {!isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default"
+                onClick={() => toggleMaximize(appId)}
+              >
+                <Square className="size-3 text-white" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700"
-              onClick={handleMaximize}
-            >
-               <Square className="size-3 text-white" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-6 rounded-full bg-red-500 hover:bg-red-600"
-              onClick={handleClose}
+              className="size-6 rounded-full bg-red-500 hover:bg-red-600 !cursor-default"
+              onClick={() => closeApp(appId)}
             >
               <X className="size-4 text-white" />
             </Button>
@@ -117,6 +121,47 @@ export default function AppWindow({ appId, title, children }: AppWindowProps) {
           </ScrollArea>
         </CardContent>
       </Card>
-    </div>
+  );
+  
+  if (isMobile) {
+    return (
+      <div className="absolute inset-0 z-30">
+        {windowContent}
+      </div>
+    )
+  }
+
+  if (isMaximized) {
+    return (
+      <div
+        className="absolute inset-0"
+        style={{ zIndex: windowState.zIndex }}
+      >
+        {windowContent}
+      </div>
+    );
+  }
+
+  return (
+    <Draggable
+      handle=".cursor-move"
+      defaultPosition={position}
+      onStop={handleDragStop}
+      cancel=".no-drag"
+    >
+      <ResizableBox
+        height={size.height}
+        width={size.width}
+        onResizeStop={onResizeStop}
+        minConstraints={[300, 200]}
+        maxConstraints={[1200, 900]}
+        className="absolute"
+        style={{ zIndex: windowState.zIndex }}
+      >
+        <div className="w-full h-full">
+          {windowContent}
+        </div>
+      </ResizableBox>
+    </Draggable>
   );
 }

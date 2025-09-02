@@ -5,21 +5,30 @@ import FishEasterEgg from '@/components/portfolio/FishEasterEgg';
 import { appRegistry } from '@/lib/app-registry';
 
 export function AppView() {
-  const { activeApp, apps } = useAppManager();
+  const { openWindows, apps } = useAppManager();
   
-  const AppContent = activeApp ? appRegistry[activeApp] : null;
-
   return (
     <>
       <FishEasterEgg />
-      {activeApp && apps[activeApp] && AppContent && (
-        <AppWindow
-          appId={activeApp}
-          title={apps[activeApp].title}
-        >
-          <AppContent />
-        </AppWindow>
-      )}
+      {openWindows
+        .filter(window => !window.isMinimized)
+        .map((window) => {
+          const app = apps[window.id];
+          const AppContent = app ? appRegistry[app.id] : null;
+
+          if (!app || !AppContent) return null;
+
+          return (
+            <AppWindow
+              key={app.id}
+              appId={app.id}
+              title={app.title}
+              windowState={window}
+            >
+              <AppContent />
+            </AppWindow>
+          );
+      })}
     </>
   );
 }
