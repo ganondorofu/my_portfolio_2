@@ -151,20 +151,19 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       onStop={handleDragStop}
       cancel=".no-drag"
     >
-        <ResizableBox
-            ref={nodeRef}
-            height={size.height}
-            width={size.width}
-            onResizeStop={onResizeStop}
-            minConstraints={[300, 200]}
-            maxConstraints={[1200, 900]}
-            className="absolute"
-            style={{ zIndex: windowState.zIndex }}
-        >
-            <div className="w-full h-full">
-            {windowContent}
-            </div>
-        </ResizableBox>
+        <div ref={nodeRef} className="absolute" style={{ zIndex: windowState.zIndex }}>
+            <ResizableBox
+                height={size.height}
+                width={size.width}
+                onResizeStop={onResizeStop}
+                minConstraints={[300, 200]}
+                maxConstraints={[1200, 900]}
+            >
+                <div className="w-full h-full">
+                {windowContent}
+                </div>
+            </ResizableBox>
+        </div>
     </Draggable>
   );
 }
