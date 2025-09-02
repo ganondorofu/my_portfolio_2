@@ -1,7 +1,7 @@
 
 'use client';
 
-import { ReactNode, useState, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Minus, Square } from 'lucide-react';
@@ -12,7 +12,7 @@ import type { WindowState } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAppManager } from '@/hooks/useAppManager';
 import Draggable from 'react-draggable';
-import { ResizableBox } from 'react-resizable';
+import { ResizableBox, ResizeCallbackData } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 
 
@@ -24,31 +24,25 @@ interface AppWindowProps {
 }
 
 export default function AppWindow({ appId, title, children, windowState }: AppWindowProps) {
-  const { closeApp, minimizeApp, toggleMaximize, focusApp, activeAppId } = useAppManager();
+  const { 
+    closeApp, 
+    minimizeApp, 
+    toggleMaximize, 
+    focusApp, 
+    activeAppId, 
+    updateWindowPosition, 
+    updateWindowSize 
+  } = useAppManager();
   const isTerminal = appId === 'profile';
   const isMobile = useIsMobile();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [size, setSize] = useState({ width: 800, height: 600 });
   const nodeRef = useRef(null);
-
-  useEffect(() => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    // Center new windows with a slight offset
-    const openWindows = document.querySelectorAll('[data-window-id]');
-    const xOffset = (openWindows.length % 5) * 30;
-    const yOffset = (openWindows.length % 5) * 30;
-    
-    setPosition({ x: vw / 2 - size.width / 2 + xOffset, y: vh / 2 - size.height / 2 + yOffset});
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appId]);
   
   const handleDragStop = (e: any, data: any) => {
-    setPosition({ x: data.x, y: data.y });
+    updateWindowPosition(appId, { x: data.x, y: data.y });
   };
   
-  const onResizeStop = (e: any, data: any) => {
-    setSize({ width: data.size.width, height: data.size.height });
+  const onResizeStop = (e: MouseEvent, data: ResizeCallbackData) => {
+    updateWindowSize(appId, { width: data.size.width, height: data.size.height });
   };
 
   const isMaximized = isMobile || windowState.isMaximized;
@@ -147,14 +141,14 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     <Draggable
       nodeRef={nodeRef}
       handle=".cursor-move"
-      position={position}
+      position={windowState.position}
       onStop={handleDragStop}
       cancel=".no-drag"
     >
         <div ref={nodeRef} className="absolute" style={{ zIndex: windowState.zIndex }}>
             <ResizableBox
-                height={size.height}
-                width={size.width}
+                height={windowState.size.height}
+                width={windowState.size.width}
                 onResizeStop={onResizeStop}
                 minConstraints={[300, 200]}
                 maxConstraints={[1200, 900]}
