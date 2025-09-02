@@ -5,8 +5,9 @@ import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import { useAppManager } from '@/hooks/useAppManager';
 import { AppManagerProvider } from '@/providers/AppManagerProvider';
+import { AppView } from '@/components/portfolio/AppView';
 
-function DesktopLayoutContent({ children }: { children: React.ReactNode }) {
+function DesktopLayoutContent() {
   const {
     isDrawerOpen,
     apps,
@@ -24,7 +25,7 @@ function DesktopLayoutContent({ children }: { children: React.ReactNode }) {
           showAppsButton={apps['show-apps']}
         />
         <main className="relative flex-1">
-          {children}
+          <AppView />
         </main>
       </div>
 
@@ -37,14 +38,10 @@ function DesktopLayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function DesktopLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppLayout() {
   return (
     <AppManagerProvider>
-      <DesktopLayoutContent>{children}</DesktopLayoutContent>
+      <DesktopLayoutContent />
     </AppManagerProvider>
   );
 }

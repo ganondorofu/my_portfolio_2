@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-import Link from 'next/link';
 import { useAppManager } from '@/hooks/useAppManager';
 
 interface DockApp {
@@ -33,27 +32,30 @@ const Icon = ({ name, className }: { name: keyof typeof LucideIcons; className?:
 }
 
 export default function Dock({ apps, showAppsButton }: DockProps) {
-  const { activeApp, minimizedApps, setDrawerOpen } = useAppManager();
-  const isAppOpen = (appId: AppID) => activeApp === appId || minimizedApps.has(appId);
+  const { openWindows, activeAppId, openApp, setDrawerOpen } = useAppManager();
+  
+  const isAppOpen = (appId: AppID) => openWindows.some(w => w.id === appId);
+  const isAppActive = (appId: AppID) => activeAppId === appId;
 
-  const handleSpecialClick = (app: DockApp) => {
+  const handleAppClick = (app: DockApp) => {
     if (app.id === 'show-apps') {
       setDrawerOpen(true);
-    } else if (app.externalUrl) {
-      window.open(app.externalUrl, '_blank');
+    } else {
+      openApp(app.id);
     }
   };
 
   const AppButton = ({ app }: { app: DockApp }) => {
-    const isSpecialButton = app.externalUrl || app.id === 'show-apps';
+    const isSpecialButton = app.id === 'show-apps';
 
     const commonProps = {
       className: cn(
         'relative flex h-16 w-16 items-center justify-center rounded-xl border-2 border-transparent transition-all duration-200 ease-in-out hover:scale-110 focus:outline-none',
         'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
-        activeApp === app.id ? 'border-primary/80 bg-white/20' : 'hover:bg-white/10'
+        isAppActive(app.id) ? 'border-primary/80 bg-white/20' : 'hover:bg-white/10'
       ),
       'aria-label': `Open ${app.title}`,
+      onClick: () => handleAppClick(app),
     };
 
     const buttonContent = (
@@ -62,24 +64,16 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
         {isAppOpen(app.id) && !isSpecialButton && (
           <span className={cn(
             "absolute bottom-0 h-1 w-4 rounded-full",
-            activeApp === app.id ? "bg-primary" : "bg-gray-400"
+            isAppActive(app.id) ? "bg-primary" : "bg-gray-400"
           )}></span>
         )}
       </>
     );
 
-    if (isSpecialButton) {
-      return (
-        <button {...commonProps} onClick={() => handleSpecialClick(app)}>
-          {buttonContent}
-        </button>
-      );
-    }
-
     return (
-      <Link href={`/${app.id}`} {...commonProps}>
+      <button {...commonProps}>
         {buttonContent}
-      </Link>
+      </button>
     );
   };
 
