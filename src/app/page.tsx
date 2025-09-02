@@ -2,7 +2,6 @@
 
 import { useAppManager } from '@/hooks/useAppManager';
 import LoginScreen from '@/components/portfolio/LoginScreen';
-import { AppManagerProvider } from '@/providers/AppManagerProvider';
 import Header from '@/components/portfolio/Header';
 import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
@@ -52,9 +51,5 @@ function Desktop() {
 }
 
 export default function HomePageWrapper() {
-  return (
-    <AppManagerProvider>
-      <Desktop />
-    </AppManagerProvider>
-  );
+  return <Desktop />;
 }

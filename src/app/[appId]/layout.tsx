@@ -4,10 +4,9 @@ import Header from '@/components/portfolio/Header';
 import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import { useAppManager } from '@/hooks/useAppManager';
-import { AppManagerProvider } from '@/providers/AppManagerProvider';
 import { AppView } from '@/components/portfolio/AppView';
 
-function DesktopLayoutContent() {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const {
     isDrawerOpen,
     apps,
@@ -26,6 +25,7 @@ function DesktopLayoutContent() {
         />
         <main className="relative flex-1">
           <AppView />
+          {children}
         </main>
       </div>
 
@@ -35,13 +35,5 @@ function DesktopLayoutContent() {
         apps={allApps}
       />
     </div>
-  );
-}
-
-export default function AppLayout() {
-  return (
-    <AppManagerProvider>
-      <DesktopLayoutContent />
-    </AppManagerProvider>
   );
 }
