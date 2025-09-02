@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect, createContext, ReactNode, useCallback } from 'react';
@@ -21,6 +22,8 @@ interface AppManagerContextType {
   focusApp: (id: AppID) => void;
   handleLogin: () => void;
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  updateWindowPosition: (id: AppID, position: { x: number; y: number }) => void;
+  updateWindowSize: (id: AppID, size: { width: number; height: number }) => void;
 }
 
 export const AppManagerContext = createContext<AppManagerContextType | null>(null);
@@ -92,25 +95,47 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     if (isAlreadyOpen) {
       focusApp(id);
     } else {
-      const newZ = zCounter + 1;
-      setZCounter(newZ);
-      const newWindow: WindowState = {
-        id,
-        isMinimized: false,
-        isMaximized: false,
-        zIndex: newZ,
-      };
-      setOpenWindows(current => [...current, newWindow]);
-      router.push(`/${id}`, { scroll: false });
+        const newZ = zCounter + 1;
+        setZCounter(newZ);
+    
+        // Calculate initial position to be centered with a slight offset
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const initialWidth = 800;
+        const initialHeight = 600;
+        const xOffset = (openWindows.length % 5) * 30;
+        const yOffset = (openWindows.length % 5) * 30;
+        const initialPosition = {
+          x: vw / 2 - initialWidth / 2 + xOffset,
+          y: vh / 3 - initialHeight / 2 + yOffset,
+        };
+
+        const newWindow: WindowState = {
+            id,
+            isMinimized: false,
+            isMaximized: false,
+            zIndex: newZ,
+            position: initialPosition,
+            size: { width: initialWidth, height: initialHeight },
+        };
+        setOpenWindows(current => [...current, newWindow]);
+        router.push(`/${id}`, { scroll: false });
     }
   }, [apps, openWindows, zCounter, focusApp, router]);
 
   const closeApp = useCallback((id: AppID) => {
-    setOpenWindows(current => current.filter(w => w.id !== id));
-    if (activeAppId === id) {
-       router.push('/', { scroll: false });
-    }
+    setOpenWindows(current => {
+      const remainingWindows = current.filter(w => w.id !== id);
+      if (remainingWindows.length === 0) {
+        router.push('/', { scroll: false });
+      } else if (activeAppId === id) {
+        const nextActiveApp = remainingWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+        router.push(`/${nextActiveApp.id}`, { scroll: false });
+      }
+      return remainingWindows;
+    });
   }, [activeAppId, router]);
+
 
   const minimizeApp = useCallback((id: AppID) => {
     setOpenWindows(current =>
@@ -128,8 +153,21 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     focusApp(id);
   }, [focusApp]);
 
+  const updateWindowPosition = useCallback((id: AppID, position: { x: number, y: number }) => {
+    setOpenWindows(current => 
+      current.map(w => w.id === id ? { ...w, position } : w)
+    );
+  }, []);
+
+  const updateWindowSize = useCallback((id: AppID, size: { width: number, height: number }) => {
+    setOpenWindows(current =>
+      current.map(w => w.id === id ? { ...w, size } : w)
+    );
+  }, []);
+
   const handleLogin = () => {
     setIsLoggedIn(true);
+    openApp('profile');
   };
   
   const contextValue: AppManagerContextType = {
@@ -147,6 +185,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     focusApp,
     handleLogin,
     setDrawerOpen,
+    updateWindowPosition,
+    updateWindowSize,
   };
 
   return (
