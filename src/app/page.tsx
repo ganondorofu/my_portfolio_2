@@ -17,10 +17,16 @@ function Desktop() {
     allApps,
     dockApps,
     setDrawerOpen,
+    openApp,
   } = useAppManager();
 
+  const onLogin = () => {
+    handleLogin();
+    openApp('profile');
+  };
+
   if (!isLoggedIn) {
-    return <LoginScreen onLoginComplete={handleLogin} />;
+    return <LoginScreen onLoginComplete={onLogin} />;
   }
 
   return (

@@ -25,11 +25,10 @@ interface AppManagerContextType {
 
 export const AppManagerContext = createContext<AppManagerContextType | null>(null);
 
-const MAX_Z_INDEX = 100;
-
 export function AppManagerProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const params = useParams();
+  const currentAppId = params.appId as AppID | undefined;
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,7 +57,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     const highestZIndex = Math.max(0, ...openWindows.map(w => w.zIndex));
     return openWindows.find(w => w.zIndex === highestZIndex && !w.isMinimized)?.id || null;
   }, [openWindows]);
-  
+
   const focusApp = useCallback((id: AppID) => {
     if (activeAppId === id) return;
     
@@ -131,9 +130,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    router.replace('/');
   };
-
+  
   const contextValue: AppManagerContextType = {
     openWindows,
     activeAppId,
