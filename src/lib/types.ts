@@ -58,7 +58,7 @@ export interface WindowState {
   isMinimized: boolean;
   isMaximized: boolean;
   zIndex: number;
-  position: { x: number; y: number };
+  position?: { x: number; y: number }; // Position can be undefined initially
   size: { width: number; height: number };
   isClosing?: boolean;
 }
