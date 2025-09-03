@@ -68,16 +68,12 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     }
   }, [openWindows]);
 
-
   const focusApp = useCallback((id: AppID) => {
-    setZCounter(prev => {
-        const newZ = prev + 1;
-        setOpenWindows(currentWindows => {
-          return currentWindows.map(w => 
-            w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
-          );
-        });
-        return newZ;
+    setOpenWindows(currentWindows => {
+      const newZ = Math.max(...currentWindows.map(w => w.zIndex)) + 1;
+      return currentWindows.map(w =>
+        w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
+      );
     });
   }, []);
 
@@ -93,51 +89,52 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     }
     
     setDrawerOpen(false);
-
+  
     const existingWindow = openWindows.find(w => w.id === id);
     
     if (existingWindow) {
       focusApp(id);
     } else {
-        setZCounter(prevZ => {
-            const newZ = prevZ + 1;
-            let position;
-            if(typeof window !== 'undefined') {
-                const vw = window.innerWidth;
-                const vh = window.innerHeight;
-                const headerHeight = 32;
-                const dockWidth = 96;
-    
-                const initialWidth = Math.min(800, vw - dockWidth - 20);
-                const initialHeight = Math.min(600, vh - headerHeight - 20);
-                
-                const windowIndex = openWindows.length;
-                const xOffset = (windowIndex % 5) * 30;
-                const yOffset = (windowIndex % 5) * 30;
-    
-                position = {
-                  x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-                  y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
-                };
-            }
-           
-            const newWindow: WindowState = {
-                id,
-                isMinimized: false,
-                isMaximized: false,
-                zIndex: newZ,
-                position: position,
-                size: { 
-                  width: 800, 
-                  height: 600,
-                },
-            };
+      setOpenWindows(current => {
+        const newZ = (current.length > 0 ? Math.max(...current.map(w => w.zIndex)) : 0) + 1;
+        
+        let position;
+        if (typeof window !== 'undefined') {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const headerHeight = 32;
+            const dockWidth = 96;
+
+            const initialWidth = Math.min(800, vw - dockWidth - 40);
+            const initialHeight = Math.min(600, vh - headerHeight - 40);
             
-            setOpenWindows(current => [...current, newWindow]);
-            return newZ;
-        });
+            const windowIndex = current.length;
+            const xOffset = (windowIndex % 5) * 30;
+            const yOffset = (windowIndex % 5) * 30;
+
+            position = {
+              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
+              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+            };
+        }
+       
+        const newWindow: WindowState = {
+            id,
+            isMinimized: false,
+            isMaximized: false,
+            zIndex: newZ,
+            position: position,
+            size: { 
+              width: 800, 
+              height: 600,
+            },
+        };
+        
+        return [...current, newWindow];
+      });
     }
   }, [apps, openWindows, focusApp]);
+  
 
   const closeApp = useCallback((id: AppID) => {
     setOpenWindows(current => current.map(w => w.id === id ? { ...w, isClosing: true } : w));
@@ -171,8 +168,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback(() => {
     if (isLoggedIn) return;
     setIsLoggedIn(true);
-    // Open profile by default after login
-    // This was removed to allow direct navigation to apps
   }, [isLoggedIn]);
 
   const contextValue: AppManagerContextType = {
