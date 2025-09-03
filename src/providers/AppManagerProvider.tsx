@@ -31,7 +31,6 @@ export const AppManagerContext = createContext<AppManagerContextType | null>(nul
 export function AppManagerProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const params = useParams();
-  const currentAppId = params.appId as AppID | undefined;
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -141,10 +140,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     setOpenWindows(current =>
       current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
-     if (activeAppId === id) {
-       router.push('/', { scroll: false });
-    }
-  }, [activeAppId, router]);
+  }, []);
 
   const toggleMaximize = useCallback((id: AppID) => {
     setOpenWindows(current =>
