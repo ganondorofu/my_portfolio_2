@@ -23,12 +23,6 @@ export const apps: Record<AppID, App> = {
     icon: 'Folder',
     iconColor: 'text-amber-500',
   },
-  history: {
-    id: 'history',
-    title: '更新履歴 (History)',
-    icon: 'GitCommitHorizontal',
-    iconColor: 'text-green-400',
-  },
   skills: {
     id: 'skills',
     title: 'スキル (Skills)',
@@ -40,6 +34,12 @@ export const apps: Record<AppID, App> = {
     title: '実績 (Achievements)',
     icon: 'Award',
     iconColor: 'text-yellow-400',
+  },
+  history: {
+    id: 'history',
+    title: '更新履歴 (History)',
+    icon: 'GitCommitHorizontal',
+    iconColor: 'text-green-400',
   },
   contact: {
     id: 'contact',
