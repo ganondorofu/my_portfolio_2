@@ -15,12 +15,9 @@ export default function History() {
               </div>
             </div>
             
-            <div className='flex flex-col sm:flex-row sm:items-center sm:gap-4'>
-              <p className="text-yellow-400">commit {entry.id}</p>
-              <div className='flex items-center gap-2'>
-                <Badge variant="secondary">{entry.version}</Badge>
-                <p className="text-muted-foreground">{entry.date}</p>
-              </div>
+            <div className='flex items-center gap-4'>
+              <Badge variant="secondary">{entry.version}</Badge>
+              <p className="text-muted-foreground">{entry.date}</p>
             </div>
             
             <p className="mt-2 text-foreground/90 text-base">{entry.description}</p>

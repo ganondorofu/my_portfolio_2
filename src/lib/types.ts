@@ -45,7 +45,6 @@ export interface Achievement {
 }
 
 export interface HistoryEntry {
-  id: string;
   version: string;
   date: string;
   description: string;
