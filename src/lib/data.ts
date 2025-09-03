@@ -65,7 +65,7 @@ export const projectsData: Project[] = [
     description: 'Discord用多機能ボット',
     technologies: ['TypeScript', 'Discord.js', 'Node.js'],
     status: 'Active',
-    github: 'https://github.com/ganondorofu/stem_Bot',
+    github: 'https://github-private.com/ganondorofu/stem_Bot',
     image: 'https://picsum.photos/600/400?random=5',
   },
   {
@@ -84,6 +84,7 @@ export const projectsData: Project[] = [
     technologies: ['Unity', 'C#', 'WebGL', 'GitHub'],
     status: 'Active',
     github: 'https://github.com/ganondorofu/STEM_Arcade',
+    url: 'https://stem-arcade.komeniki.net/',
     image: 'https://picsum.photos/600/400?random=7',
   },
 ];
@@ -179,15 +180,21 @@ export const achievementsData: Achievement[] = [
 
 export const historyData: HistoryEntry[] = [
   {
+    id: 'f4d8e9f1',
+    version: 'v1.4.0',
+    date: '2024-08-05',
+    description: 'ウィンドウのちらつき、表示位置、移動に関する多数の問題を修正し、安定性を向上させました。',
+  },
+  {
     id: 'a1b2c3d4',
     version: 'v1.3.0',
-    date: '2024-07-31',
+    date: '2024-08-02',
     description: 'Git風のUIで「更新履歴」アプリを実装しました。',
   },
   {
     id: 'e5f6g7h8',
     version: 'v1.2.1',
-    date: '2024-07-30',
+    date: '2024-08-01',
     description: 'ウィンドウのちらつきに関する複数の視覚的なバグを修正しました。',
   },
   {
