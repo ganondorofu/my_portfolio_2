@@ -49,7 +49,7 @@ export default function Contact() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-primary">Contact Me</h2>
       <p className="text-muted-foreground">
-        ご質問やご相談、お仕事の依頼など、お気軽にご連絡ください。
+        お気軽にご連絡ください。
       </p>
 
       <div className="flex items-center gap-2 rounded-md border p-3">
