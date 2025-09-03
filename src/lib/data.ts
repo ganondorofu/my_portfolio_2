@@ -1,4 +1,4 @@
-import type { ProfileData, Project, SkillCategory, Achievement, Commit } from './types';
+import type { ProfileData, Project, SkillCategory, Achievement, HistoryEntry } from './types';
 
 export const profileData: ProfileData = {
   name: 'komeniki',
@@ -177,29 +177,29 @@ export const achievementsData: Achievement[] = [
     },
 ];
 
-export const historyData: Commit[] = [
+export const historyData: HistoryEntry[] = [
   {
-    hash: 'a1b2c3d4',
-    author: 'komeniki',
+    id: 'a1b2c3d4',
+    version: 'v1.3.0',
     date: '2024-07-31',
-    message: 'Git風のUIで「更新履歴」アプリを実装しました。',
+    description: 'Git風のUIで「更新履歴」アプリを実装しました。',
   },
   {
-    hash: 'e5f6g7h8',
-    author: 'komeniki',
+    id: 'e5f6g7h8',
+    version: 'v1.2.1',
     date: '2024-07-30',
-    message: 'ウィンドウのちらつきに関する複数の視覚的なバグを修正しました。',
+    description: 'ウィンドウのちらつきに関する複数の視覚的なバグを修正しました。',
   },
   {
-    hash: 'i9j0k1l2',
-    author: 'komeniki',
+    id: 'i9j0k1l2',
+    version: 'v1.2.0',
     date: '2024-07-29',
-    message: 'ウィンドウの開閉、最大化・最小化にアニメーションを追加しました。',
+    description: 'ウィンドウの開閉、最大化・最小化にアニメーションを追加しました。',
   },
   {
-    hash: 'm3n4o5p6',
-    author: 'komeniki',
+    id: 'm3n4o5p6',
+    version: 'v1.0.0',
     date: '2024-07-28',
-    message: 'ポートフォリオの初期セットアップと、OS風UIの最初のバージョンを公開しました。',
+    description: 'ポートフォリオの初期セットアップと、OS風UIの最初のバージョンを公開しました。',
   },
 ];

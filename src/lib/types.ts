@@ -44,11 +44,11 @@ export interface Achievement {
   }[];
 }
 
-export interface Commit {
-  hash: string;
-  author: string;
+export interface HistoryEntry {
+  id: string;
+  version: string;
   date: string;
-  message: string;
+  description: string;
 }
 
 export interface App {
