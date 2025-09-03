@@ -75,7 +75,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeAppId, openWindows, isLoggedIn]);
+  }, [activeAppId, isLoggedIn]);
 
   useEffect(() => {
     const windowsToClose = openWindows.filter(w => w.isClosing);
@@ -152,7 +152,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
                 isMinimized: false,
                 isMaximized: false,
                 zIndex: newZ,
-                position: position, // Position is now calculated here
+                position: position,
                 size: { 
                   width: Math.min(800, window.innerWidth - 96 - 20), 
                   height: Math.min(600, window.innerHeight - 32 - 20) 
@@ -179,7 +179,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
   const minimizeApp = useCallback((id: AppID) => {
     setOpenWindows(current =>
-      current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
+      current.map(w => (w.id === id ? { ...w, isMinimized: true, isClosing: true } : w))
     );
   }, []);
 
@@ -205,7 +205,11 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback(() => {
     if (isLoggedIn) return;
     setIsLoggedIn(true);
-  }, [isLoggedIn]);
+    const appId = params.appId as AppID;
+    if (appId && apps[appId] && appId !== 'profile') {
+      openApp(appId);
+    }
+  }, [isLoggedIn, params.appId, apps, openApp]);
 
   const contextValue: AppManagerContextType = {
     openWindows,
