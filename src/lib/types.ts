@@ -44,10 +44,11 @@ export interface Achievement {
   }[];
 }
 
-export interface HistoryEntry {
-  version: string;
+export interface Commit {
+  hash: string;
+  author: string;
   date: string;
-  description: string;
+  message: string;
 }
 
 export interface App {
@@ -64,7 +65,7 @@ export interface WindowState {
   isMinimized: boolean;
   isMaximized: boolean;
   zIndex: number;
-  position: { x: number; y: number };
+  position: { x: number; y: number } | undefined;
   size: { width: number; height: number };
   isClosing?: boolean;
 }
