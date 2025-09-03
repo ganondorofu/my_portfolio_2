@@ -69,7 +69,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         router.push('/', { scroll: false });
       } else if (activeAppId && activeAppId !== lastClosedAppId) {
          router.push(`/${activeAppId}`, { scroll: false });
-      } else if (!activeAppId && openWindows.length > 0) {
+      } else {
          const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
          if (nonMinimizedWindows.length > 0) {
             const nextActiveApp = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
