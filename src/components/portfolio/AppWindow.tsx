@@ -1,7 +1,7 @@
 
 'use client';
 
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Minus, Square } from 'lucide-react';
@@ -32,37 +32,10 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     activeAppId, 
     updateWindowPosition, 
     updateWindowSize,
-    openWindows,
   } = useAppManager();
   const isTerminal = appId === 'profile';
   const isMobile = useIsMobile();
   const nodeRef = useRef(null);
-  
-  useEffect(() => {
-    // If the window position is undefined, calculate and set the initial position.
-    // This ensures the calculation only happens on the client-side after mount,
-    // preventing the "jump from top-left" bug caused by server-side rendering.
-    if (!windowState.position) {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const headerHeight = 32;
-      const dockWidth = 96;
-
-      const initialWidth = windowState.size.width;
-      const initialHeight = windowState.size.height;
-      const windowIndex = openWindows.findIndex(w => w.id === appId);
-      const xOffset = ((windowIndex >= 0 ? windowIndex : openWindows.length) % 5) * 30;
-      const yOffset = ((windowIndex >= 0 ? windowIndex : openWindows.length) % 5) * 30;
-
-      const newPosition = {
-        x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-        y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
-      };
-      updateWindowPosition(appId, newPosition);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appId, windowState.position, updateWindowPosition]);
-
 
   const handleDragStop = (e: any, data: any) => {
     updateWindowPosition(appId, { x: data.x, y: data.y });
@@ -94,7 +67,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
           isTerminal ? 'border-2 border-primary/50' : 'border',
           isActive ? 'shadow-primary/50' : 'shadow-black/50',
           cardBgClass,
-          windowState.isClosing && "animate-window-close"
+          windowState.isClosing ? "animate-window-close" : "animate-window-open"
         )}
       >
         <CardHeader className={cn(
@@ -152,7 +125,6 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     return (
       <div className={cn(
         "absolute inset-0 z-30",
-        windowState.position && "animate-window-open", // Animate only when position is set
         commonWrapperClass
       )}>
         {windowContent}
@@ -165,7 +137,6 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       <div
         className={cn(
           "absolute inset-0",
-           windowState.position && "animate-window-open", // Animate only when position is set
           commonWrapperClass
         )}
         style={{ zIndex: windowState.zIndex }}
@@ -186,13 +157,12 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
         <div ref={nodeRef} 
           className={cn(
             "absolute",
-            windowState.position && "animate-window-open", // Animate only when position is set
             commonWrapperClass
           )} 
           style={{ 
             zIndex: windowState.zIndex, 
             width: windowState.size.width, 
-            height: windowState.size.height 
+            height: windowState.size.height,
           }}>
             <ResizableBox
                 height={windowState.size.height}
