@@ -70,12 +70,17 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
   const focusApp = useCallback((id: AppID) => {
     setOpenWindows(currentWindows => {
-      const newZ = Math.max(...currentWindows.map(w => w.zIndex)) + 1;
+      const isAlreadyFocused = activeAppId === id;
+      if (isAlreadyFocused) return currentWindows;
+      
+      const newZ = zCounter + 1;
+      setZCounter(newZ);
+
       return currentWindows.map(w =>
         w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
       );
     });
-  }, []);
+  }, [activeAppId, zCounter]);
 
   const openApp = useCallback((id: AppID) => {
     if (id === 'show-apps') {
@@ -90,13 +95,20 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     
     setDrawerOpen(false);
   
-    const existingWindow = openWindows.find(w => w.id === id);
-    
-    if (existingWindow) {
-      focusApp(id);
-    } else {
-      setOpenWindows(current => {
-        const newZ = (current.length > 0 ? Math.max(...current.map(w => w.zIndex)) : 0) + 1;
+    setOpenWindows(current => {
+      const existingWindow = current.find(w => w.id === id);
+      
+      if (existingWindow) {
+        // If window exists, just focus it.
+        const newZ = zCounter + 1;
+        setZCounter(newZ);
+        return current.map(w =>
+          w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
+        );
+      } else {
+        // If window doesn't exist, create it.
+        const newZ = zCounter + 1;
+        setZCounter(newZ);
         
         let position;
         if (typeof window !== 'undefined') {
@@ -131,9 +143,9 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         };
         
         return [...current, newWindow];
-      });
-    }
-  }, [apps, openWindows, focusApp]);
+      }
+    });
+  }, [apps, zCounter]);
   
 
   const closeApp = useCallback((id: AppID) => {
