@@ -43,7 +43,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   const isMobile = useIsMobile();
   const nodeRef = useRef(null);
 
-  const handleDrag = (e: any, data: any) => {
+  const handleDragStop = (e: any, data: any) => {
     updateWindowPosition(appId, { x: data.x, y: data.y });
   };
   
@@ -159,14 +159,13 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       nodeRef={nodeRef}
       handle=".cursor-move"
       position={windowState.position}
-      onDrag={handleDrag}
+      onStop={handleDragStop}
       cancel=".no-drag"
       onStart={() => focusApp(appId)}
     >
         <div ref={nodeRef} 
           className={cn(
             "absolute",
-            commonWrapperClass
           )} 
           style={{ 
             zIndex: windowState.zIndex, 
