@@ -43,7 +43,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   const isMobile = useIsMobile();
   const nodeRef = useRef(null);
 
-  const handleDragStop = (e: any, data: any) => {
+  const handleDrag = (e: any, data: any) => {
     updateWindowPosition(appId, { x: data.x, y: data.y });
   };
   
@@ -159,7 +159,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       nodeRef={nodeRef}
       handle=".cursor-move"
       position={windowState.position}
-      onStop={handleDragStop}
+      onDrag={handleDrag}
       cancel=".no-drag"
     >
         <div ref={nodeRef} 
@@ -171,6 +171,8 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
             zIndex: windowState.zIndex, 
             width: windowState.size.width, 
             height: windowState.size.height,
+            top: windowState.position.y,
+            left: windowState.position.x,
           }}>
             <ResizableBox
                 height={windowState.size.height}
