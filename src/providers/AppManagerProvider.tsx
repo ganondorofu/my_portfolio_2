@@ -3,7 +3,6 @@
 
 import { useState, useMemo, useEffect, createContext, ReactNode, useCallback } from 'react';
 import { apps as appConfig, type AppID } from '@/lib/apps';
-import { useRouter } from 'next/navigation';
 import type { App, WindowState } from '@/lib/types';
 import { appRegistry } from '@/lib/app-registry';
 
@@ -29,8 +28,6 @@ interface AppManagerContextType {
 export const AppManagerContext = createContext<AppManagerContextType | null>(null);
 
 export function AppManagerProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
-
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openWindows, setOpenWindows] = useState<WindowState[]>([]);
