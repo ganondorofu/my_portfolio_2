@@ -66,7 +66,8 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
           isMaximized ? 'rounded-none border-0' : 'rounded-lg',
           isTerminal ? 'border-2 border-primary/50' : 'border',
           isActive ? 'shadow-primary/50' : 'shadow-black/50',
-          cardBgClass
+          cardBgClass,
+          windowState.isClosing && "animate-window-close"
         )}
       >
         <CardHeader className={cn(
@@ -118,9 +119,14 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       </Card>
   );
   
+  const commonWrapperClass = "transition-[left,top,width,height] duration-200 ease-in-out";
+
   if (isMobile) {
     return (
-      <div className="absolute inset-0 z-30">
+      <div className={cn(
+        "absolute inset-0 z-30 animate-window-open",
+        commonWrapperClass
+      )}>
         {windowContent}
       </div>
     )
@@ -129,7 +135,10 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   if (isMaximized) {
     return (
       <div
-        className="absolute inset-0"
+        className={cn(
+          "absolute inset-0 animate-window-open",
+          commonWrapperClass
+        )}
         style={{ zIndex: windowState.zIndex }}
       >
         {windowContent}
@@ -145,7 +154,16 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       onStop={handleDragStop}
       cancel=".no-drag"
     >
-        <div ref={nodeRef} className="absolute" style={{ zIndex: windowState.zIndex }}>
+        <div ref={nodeRef} 
+          className={cn(
+            "absolute animate-window-open",
+            commonWrapperClass
+          )} 
+          style={{ 
+            zIndex: windowState.zIndex, 
+            width: windowState.size.width, 
+            height: windowState.size.height 
+          }}>
             <ResizableBox
                 height={windowState.size.height}
                 width={windowState.size.width}
