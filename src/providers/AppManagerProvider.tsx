@@ -141,7 +141,14 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             position: initialPosition,
             size: { width: initialWidth, height: initialHeight },
         };
-        setOpenWindows(current => [...current, newWindow]);
+        
+        setOpenWindows(current => {
+          // Final check to prevent duplicates, even with race conditions.
+          if (current.some(w => w.id === id)) {
+            return current;
+          }
+          return [...current, newWindow];
+        });
         router.push(`/${id}`, { scroll: false });
     }
   }, [apps, openWindows, zCounter, focusApp, router]);
