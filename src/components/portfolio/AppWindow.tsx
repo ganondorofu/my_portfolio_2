@@ -60,7 +60,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   const contentPadding = isTerminal ? 'p-0' : 'p-4 md:p-6';
 
   if (windowState.isMinimized || !windowState.position) {
-    return null; // Don't render if minimized or position is not yet calculated
+    return null;
   }
   
   const animationClass = isMounted && !windowState.isClosing ? "animate-window-open" : windowState.isClosing ? "animate-window-close" : "";
@@ -158,7 +158,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     <Draggable
       nodeRef={nodeRef}
       handle=".cursor-move"
-      position={windowState.position}
+      defaultPosition={windowState.position}
       onStop={handleDragStop}
       cancel=".no-drag"
       onStart={() => focusApp(appId)}
@@ -171,8 +171,6 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
             zIndex: windowState.zIndex, 
             width: windowState.size.width, 
             height: windowState.size.height,
-            top: windowState.position.y,
-            left: windowState.position.x,
           }}>
             <ResizableBox
                 height={windowState.size.height}
