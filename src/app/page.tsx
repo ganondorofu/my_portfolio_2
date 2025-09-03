@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useAppManager } from '@/hooks/useAppManager';
@@ -16,16 +17,10 @@ function Desktop() {
     allApps,
     dockApps,
     setDrawerOpen,
-    openApp,
   } = useAppManager();
 
-  const onLogin = () => {
-    handleLogin();
-    openApp('profile');
-  };
-
   if (!isLoggedIn) {
-    return <LoginScreen onLoginComplete={onLogin} />;
+    return <LoginScreen onLoginComplete={handleLogin} />;
   }
 
   return (
@@ -36,7 +31,7 @@ function Desktop() {
           apps={dockApps.map(id => apps[id])}
           showAppsButton={apps['show-apps']}
         />
-        <main className="relative flex-1">
+        <main className="relative flex-1" style={{ height: 'calc(100vh - 2rem)' }}>
           <AppView />
         </main>
       </div>

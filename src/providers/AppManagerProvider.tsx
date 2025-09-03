@@ -66,15 +66,16 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
       if (openWindows.length === 0) {
         router.push('/', { scroll: false });
       } else if (activeAppId && activeAppId !== lastClosedAppId) {
-         // The activeAppId has already changed to the next top window.
-         // Let's sync the URL to it.
          router.push(`/${activeAppId}`, { scroll: false });
       } else if (!activeAppId && openWindows.length > 0) {
-         // This can happen if the last active window was minimized then closed.
-         const nextActiveApp = openWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-         router.push(`/${nextActiveApp.id}`, { scroll: false });
+         const nextActiveApp = openWindows.filter(w => !w.isMinimized).reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+         if (nextActiveApp) {
+           router.push(`/${nextActiveApp.id}`, { scroll: false });
+         } else {
+            router.push(`/`, { scroll: false });
+         }
       }
-      setLastClosedAppId(null); // Reset after handling
+      setLastClosedAppId(null); 
     }
   }, [openWindows, activeAppId, lastClosedAppId, router]);
 
@@ -116,7 +117,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         const newZ = zCounter + 1;
         setZCounter(newZ);
     
-        // Calculate initial position to be centered with a slight offset
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const initialWidth = 800;
@@ -150,18 +150,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     setOpenWindows(current =>
       current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
-     // After minimizing, we need to figure out the next active app and set the URL.
-     // This is now handled by the useEffect that watches [openWindows]
-    const otherWindows = openWindows.filter(w => w.id !== id && !w.isMinimized);
-    if (activeAppId === id) { // Only change URL if the active app was minimized
-      if (otherWindows.length > 0) {
-        const nextActiveApp = otherWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-        router.push(`/${nextActiveApp.id}`, { scroll: false });
-      } else {
-        router.push(`/`, { scroll: false });
-      }
-    }
-  }, [activeAppId, openWindows, router]);
+    setLastClosedAppId(id);
+  }, []);
 
   const toggleMaximize = useCallback((id: AppID) => {
     setOpenWindows(current =>
@@ -184,9 +174,15 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    openApp('profile');
   };
   
+  useEffect(() => {
+    if (isLoggedIn) {
+      openApp('profile');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
+
   const contextValue: AppManagerContextType = {
     openWindows,
     activeAppId,
