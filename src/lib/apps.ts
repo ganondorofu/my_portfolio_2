@@ -6,6 +6,7 @@ export type AppID =
   | 'skills'
   | 'achievements'
   | 'contact'
+  | 'history'
   | 'github'
   | 'show-apps';
 
@@ -21,6 +22,12 @@ export const apps: Record<AppID, App> = {
     title: 'プロジェクト (Projects)',
     icon: 'Folder',
     iconColor: 'text-amber-500',
+  },
+  history: {
+    id: 'history',
+    title: '更新履歴 (History)',
+    icon: 'GitCommitHorizontal',
+    iconColor: 'text-green-400',
   },
   skills: {
     id: 'skills',

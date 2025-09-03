@@ -44,6 +44,13 @@ export interface Achievement {
   }[];
 }
 
+export interface Commit {
+  hash: string;
+  author: string;
+  date: string;
+  message: string;
+}
+
 export interface App {
   id: AppID;
   title: string;
@@ -58,7 +65,7 @@ export interface WindowState {
   isMinimized: boolean;
   isMaximized: boolean;
   zIndex: number;
-  position?: { x: number; y: number }; // Position can be undefined initially
+  position: { x: number; y: number };
   size: { width: number; height: number };
   isClosing?: boolean;
 }

@@ -5,6 +5,7 @@ import Projects from '@/components/portfolio/apps/Projects';
 import Skills from '@/components/portfolio/apps/Skills';
 import Achievements from '@/components/portfolio/apps/Achievements';
 import Contact from '@/components/portfolio/apps/Contact';
+import History from '@/components/portfolio/apps/History';
 import type { AppID } from './apps';
 
 export const appRegistry: Record<AppID, ComponentType> = {
@@ -13,6 +14,7 @@ export const appRegistry: Record<AppID, ComponentType> = {
   skills: Skills,
   achievements: Achievements,
   contact: Contact,
+  history: History,
   github: () => null, // No content for external link
   'show-apps': () => null, // No content for this action
 };
