@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect, createContext, ReactNode, useCallback } from 'react';
 import { apps as appConfig, type AppID } from '@/lib/apps';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import type { App, WindowState } from '@/lib/types';
 import { appRegistry } from '@/lib/app-registry';
 
@@ -30,7 +30,6 @@ export const AppManagerContext = createContext<AppManagerContextType | null>(nul
 
 export function AppManagerProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const params = useParams();
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -74,13 +73,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
 
   const focusApp = useCallback((id: AppID) => {
-    const window = openWindows.find(w => w.id === id);
-    if (!window) return;
-
-    if (activeAppId === id && !window.isMinimized) {
-      return; // Already active and not minimized
-    }
-    
     setZCounter(prev => {
         const newZ = prev + 1;
         setOpenWindows(currentWindows => {
@@ -90,7 +82,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         });
         return newZ;
     });
-  }, [activeAppId, openWindows]);
+  }, []);
 
   const openApp = useCallback((id: AppID) => {
     if (id === 'show-apps') {
@@ -111,25 +103,26 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     } else {
         setZCounter(prevZ => {
             const newZ = prevZ + 1;
-    
+
             let position;
-            // This now runs only on the client, preventing SSR issues.
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const headerHeight = 32;
-            const dockWidth = 96;
-
-            const initialWidth = Math.min(800, vw - dockWidth - 20);
-            const initialHeight = Math.min(600, vh - headerHeight - 20);
-            
-            const windowIndex = openWindows.length;
-            const xOffset = (windowIndex % 5) * 30;
-            const yOffset = (windowIndex % 5) * 30;
-
-            position = {
-              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
-            };
+            if(typeof window !== 'undefined') {
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const headerHeight = 32;
+                const dockWidth = 96;
+    
+                const initialWidth = Math.min(800, vw - dockWidth - 20);
+                const initialHeight = Math.min(600, vh - headerHeight - 20);
+                
+                const windowIndex = openWindows.length;
+                const xOffset = (windowIndex % 5) * 30;
+                const yOffset = (windowIndex % 5) * 30;
+    
+                position = {
+                  x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
+                  y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+                };
+            }
            
             const newWindow: WindowState = {
                 id,
@@ -138,14 +131,13 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
                 zIndex: newZ,
                 position: position,
                 size: { 
-                  width: Math.min(800, window.innerWidth - 96 - 20), 
-                  height: Math.min(600, window.innerHeight - 32 - 20) 
+                  width: 800, 
+                  height: 600,
                 },
             };
             
             setOpenWindows(current => {
               if (current.some(w => w.id === id)) {
-                 // In case of a race condition, focus the existing window
                  focusApp(id);
                  return current;
               }
@@ -163,7 +155,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
 
   const minimizeApp = useCallback((id: AppID) => {
     setOpenWindows(current =>
-      current.map(w => (w.id === id ? { ...w, isMinimized: true, isClosing: true } : w))
+      current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
   }, []);
 
