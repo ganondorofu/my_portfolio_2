@@ -36,7 +36,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openWindows, setOpenWindows] = useState<WindowState[]>([]);
   const [zCounter, setZCounter] = useState(1);
-  const [lastClosedAppId, setLastClosedAppId] = useState<AppID | null>(null);
+  const [lastInteractedAppId, setLastInteractedAppId] = useState<AppID | null>(null);
 
   const apps = useMemo(() => {
     const appsWithContent: Record<AppID, App> = { ...appConfig };
@@ -64,43 +64,69 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, [openWindows]);
   
   useEffect(() => {
-    if (lastClosedAppId) {
-      const remainingWindows = openWindows.filter(w => !w.isMinimized);
-      if (remainingWindows.length === 0) {
-        if (openWindows.length > 0) {
-          // All are minimized
-           router.push('/', { scroll: false });
+    if (lastInteractedAppId) {
+        const currentActiveApp = openWindows.find(w => w.id === activeAppId);
+        if (currentActiveApp && !currentActiveApp.isMinimized) {
+            if (params.appId !== activeAppId) {
+                router.push(`/${activeAppId}`, { scroll: false });
+            }
         } else {
-           // All windows closed
-           router.push('/', { scroll: false });
+            const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
+            if (nonMinimizedWindows.length > 0) {
+                const nextActiveApp = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+                if (nextActiveApp && params.appId !== nextActiveApp.id) {
+                    router.push(`/${nextActiveApp.id}`, { scroll: false });
+                }
+            } else {
+                if (params.appId !== undefined) {
+                    router.push('/', { scroll: false });
+                }
+            }
         }
-      } else if (activeAppId && activeAppId !== lastClosedAppId) {
-         router.push(`/${activeAppId}`, { scroll: false });
-      } else {
-         const nextActiveApp = remainingWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-         router.push(`/${nextActiveApp.id}`, { scroll: false });
-      }
-      setLastClosedAppId(null); 
+        setLastInteractedAppId(null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openWindows, lastClosedAppId]);
+  }, [openWindows, lastInteractedAppId, activeAppId]);
+
+
+  useEffect(() => {
+    const windowsToClose = openWindows.filter(w => w.isClosing || w.isMinimized);
+    if (windowsToClose.length > 0) {
+      const timer = setTimeout(() => {
+        setOpenWindows(current => current.filter(w => !w.isClosing));
+      }, 200); // Corresponds to animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [openWindows]);
+
 
   const focusApp = useCallback((id: AppID) => {
-    if (activeAppId === id) return;
+    if (activeAppId === id) {
+       // If it's already active but minimized, un-minimize it.
+       const window = openWindows.find(w => w.id === id);
+       if(window?.isMinimized) {
+         setOpenWindows(currentWindows =>
+           currentWindows.map(w => (w.id === id ? { ...w, isMinimized: false } : w))
+         );
+       }
+       return;
+    }
     
-    setOpenWindows(currentWindows => {
-      const newZ = zCounter + 1;
-      setZCounter(newZ);
-      return currentWindows.map(w => 
-        w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
-      );
+    setZCounter(prev => {
+        const newZ = prev + 1;
+        setOpenWindows(currentWindows => {
+          return currentWindows.map(w => 
+            w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
+          );
+        });
+        return newZ;
     });
 
     const app = appConfig[id];
-    if (app && !app.externalUrl) {
+    if (app && !app.externalUrl && params.appId !== id) {
       router.push(`/${id}`, { scroll: false });
     }
-  }, [activeAppId, zCounter, router]);
+  }, [activeAppId, router, openWindows, params.appId]);
 
   const openApp = useCallback((id: AppID) => {
     if (id === 'show-apps') {
@@ -119,50 +145,58 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     if (isAlreadyOpen) {
       focusApp(id);
     } else {
-        const newZ = zCounter + 1;
-        setZCounter(newZ);
+        setZCounter(prevZ => {
+            const newZ = prevZ + 1;
     
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const initialWidth = Math.min(800, vw * 0.8);
-        const initialHeight = Math.min(600, vh * 0.7);
-        const xOffset = (openWindows.length % 5) * 30;
-        const yOffset = (openWindows.length % 5) * 30;
-        const initialPosition = {
-          x: Math.max(0, vw / 2 - initialWidth / 2 + xOffset),
-          y: Math.max(2, (vh - 32) / 2 - initialHeight / 2 + yOffset), // 32 is header height
-        };
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const headerHeight = 32;
+            const dockWidth = 96;
+            
+            const initialWidth = Math.min(800, vw - dockWidth - 20);
+            const initialHeight = Math.min(600, vh - headerHeight - 20);
+            const xOffset = (openWindows.length % 5) * 30;
+            const yOffset = (openWindows.length % 5) * 30;
+            
+            const initialPosition = {
+              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
+              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+            };
 
-        const newWindow: WindowState = {
-            id,
-            isMinimized: false,
-            isMaximized: false,
-            zIndex: newZ,
-            position: initialPosition,
-            size: { width: initialWidth, height: initialHeight },
-        };
-        
-        setOpenWindows(current => {
-          // Final check to prevent duplicates, even with race conditions.
-          if (current.some(w => w.id === id)) {
-            return current;
-          }
-          return [...current, newWindow];
+            const newWindow: WindowState = {
+                id,
+                isMinimized: false,
+                isMaximized: false,
+                zIndex: newZ,
+                position: initialPosition,
+                size: { width: initialWidth, height: initialHeight },
+            };
+            
+            setOpenWindows(current => {
+              if (current.some(w => w.id === id)) {
+                return current;
+              }
+              return [...current, newWindow];
+            });
+
+            if (params.appId !== id) {
+              router.push(`/${id}`, { scroll: false });
+            }
+            return newZ;
         });
-        router.push(`/${id}`, { scroll: false });
     }
-  }, [apps, openWindows, zCounter, focusApp, router]);
+  }, [apps, openWindows, focusApp, router, params.appId]);
 
   const closeApp = useCallback((id: AppID) => {
-    setLastClosedAppId(id);
-    setOpenWindows(current => current.filter(w => w.id !== id));
+    setLastInteractedAppId(id);
+    setOpenWindows(current => current.map(w => w.id === id ? { ...w, isClosing: true } : w));
   }, []);
 
   const minimizeApp = useCallback((id: AppID) => {
+    setLastInteractedAppId(id);
     setOpenWindows(current =>
-      current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
+      current.map(w => (w.id === id ? { ...w, isMinimized: true, isClosing: true } : w))
     );
-    setLastClosedAppId(id);
   }, []);
 
   const toggleMaximize = useCallback((id: AppID) => {
