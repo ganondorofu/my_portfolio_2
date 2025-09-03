@@ -20,7 +20,7 @@ export function AppView() {
 
           return (
             <AppWindow
-              key={`${app.id}-${window.zIndex}`}
+              key={app.id}
               appId={app.id}
               title={app.title}
               windowState={window}
