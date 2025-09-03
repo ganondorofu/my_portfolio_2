@@ -57,8 +57,10 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const dockApps = useMemo(() => allApps.map(app => app.id), [allApps]);
 
   const activeAppId = useMemo(() => {
-    const highestZIndex = Math.max(0, ...openWindows.map(w => w.zIndex));
-    return openWindows.find(w => w.zIndex === highestZIndex && !w.isMinimized)?.id || null;
+    const nonMinimized = openWindows.filter(w => !w.isMinimized);
+    if (nonMinimized.length === 0) return null;
+    const highestZIndex = Math.max(0, ...nonMinimized.map(w => w.zIndex));
+    return nonMinimized.find(w => w.zIndex === highestZIndex)?.id || null;
   }, [openWindows]);
   
   useEffect(() => {
@@ -68,9 +70,10 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
       } else if (activeAppId && activeAppId !== lastClosedAppId) {
          router.push(`/${activeAppId}`, { scroll: false });
       } else if (!activeAppId && openWindows.length > 0) {
-         const nextActiveApp = openWindows.filter(w => !w.isMinimized).reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-         if (nextActiveApp) {
-           router.push(`/${nextActiveApp.id}`, { scroll: false });
+         const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
+         if (nonMinimizedWindows.length > 0) {
+            const nextActiveApp = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+            router.push(`/${nextActiveApp.id}`, { scroll: false });
          } else {
             router.push(`/`, { scroll: false });
          }
@@ -124,8 +127,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         const xOffset = (openWindows.length % 5) * 30;
         const yOffset = (openWindows.length % 5) * 30;
         const initialPosition = {
-          x: vw / 2 - initialWidth / 2 + xOffset,
-          y: vh / 3 - initialHeight / 2 + yOffset,
+          x: Math.max(0, vw / 2 - initialWidth / 2 + xOffset),
+          y: Math.max(0, vh / 3 - initialHeight / 2 + yOffset),
         };
 
         const newWindow: WindowState = {
@@ -172,16 +175,10 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = useCallback(() => {
     setIsLoggedIn(true);
-  };
-  
-  useEffect(() => {
-    if (isLoggedIn) {
-      openApp('profile');
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+    openApp('profile');
+  }, [openApp]);
 
   const contextValue: AppManagerContextType = {
     openWindows,
