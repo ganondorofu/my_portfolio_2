@@ -6,6 +6,7 @@ import Dock from '@/components/portfolio/Dock';
 import AppDrawer from '@/components/portfolio/AppDrawer';
 import { useAppManager } from '@/hooks/useAppManager';
 import { AppView } from '@/components/portfolio/AppView';
+import { useEffect } from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const {
@@ -14,7 +15,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     allApps,
     dockApps,
     setDrawerOpen,
+    handleLogin,
+    isLoggedIn,
   } = useAppManager();
+
+  useEffect(() => {
+    // If the user lands directly on an app page, we should consider them logged in.
+    if (!isLoggedIn) {
+      handleLogin();
+    }
+  }, [handleLogin, isLoggedIn]);
 
   return (
     <div className="desktop-background flex h-screen w-screen flex-col overflow-hidden font-headline">
