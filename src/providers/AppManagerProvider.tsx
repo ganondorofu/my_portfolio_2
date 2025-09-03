@@ -69,13 +69,13 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     if (isLoggedIn) {
       if (activeAppId && currentAppId !== activeAppId) {
         router.push(`/${activeAppId}`, { scroll: false });
-      } else if (!activeAppId && currentAppId) {
+      } else if (!activeAppId && openWindows.length === 0 && currentAppId) {
+         // All windows are closed or minimized
         router.push('/', { scroll: false });
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeAppId, isLoggedIn, params.appId]);
-
+  }, [activeAppId, openWindows, isLoggedIn]);
 
   useEffect(() => {
     const windowsToClose = openWindows.filter(w => w.isClosing);
@@ -127,24 +127,40 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         setZCounter(prevZ => {
             const newZ = prevZ + 1;
     
-            const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
-            const vh = typeof window !== 'undefined' ? window.innerHeight : 0;
-            const headerHeight = 32;
-            const dockWidth = 96;
+            let position;
+            if (typeof window !== 'undefined') {
+              const vw = window.innerWidth;
+              const vh = window.innerHeight;
+              const headerHeight = 32;
+              const dockWidth = 96;
 
-            const initialWidth = Math.min(800, vw - dockWidth - 20);
-            const initialHeight = Math.min(600, vh - headerHeight - 20);
+              const initialWidth = Math.min(800, vw - dockWidth - 20);
+              const initialHeight = Math.min(600, vh - headerHeight - 20);
+              
+              const windowIndex = openWindows.length;
+              const xOffset = (windowIndex % 5) * 30;
+              const yOffset = (windowIndex % 5) * 30;
+
+              position = {
+                x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
+                y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+              };
+            }
            
             const newWindow: WindowState = {
                 id,
                 isMinimized: false,
                 isMaximized: false,
                 zIndex: newZ,
-                position: undefined, 
-                size: { width: initialWidth, height: initialHeight },
+                position: position, // Position is now calculated here
+                size: { 
+                  width: Math.min(800, window.innerWidth - 96 - 20), 
+                  height: Math.min(600, window.innerHeight - 32 - 20) 
+                },
             };
             
             setOpenWindows(current => {
+              // Final check to prevent race conditions
               if (current.some(w => w.id === id)) {
                 return current;
               }
@@ -154,6 +170,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             return newZ;
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apps, openWindows, focusApp]);
 
   const closeApp = useCallback((id: AppID) => {
