@@ -36,6 +36,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openWindows, setOpenWindows] = useState<WindowState[]>([]);
   const [zCounter, setZCounter] = useState(1);
+  const [lastClosedAppId, setLastClosedAppId] = useState<AppID | null>(null);
 
   const apps = useMemo(() => {
     const appsWithContent: Record<AppID, App> = { ...appConfig };
@@ -59,6 +60,24 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     const highestZIndex = Math.max(0, ...openWindows.map(w => w.zIndex));
     return openWindows.find(w => w.zIndex === highestZIndex && !w.isMinimized)?.id || null;
   }, [openWindows]);
+  
+  useEffect(() => {
+    if (lastClosedAppId) {
+      if (openWindows.length === 0) {
+        router.push('/', { scroll: false });
+      } else if (activeAppId && activeAppId !== lastClosedAppId) {
+         // The activeAppId has already changed to the next top window.
+         // Let's sync the URL to it.
+         router.push(`/${activeAppId}`, { scroll: false });
+      } else if (!activeAppId && openWindows.length > 0) {
+         // This can happen if the last active window was minimized then closed.
+         const nextActiveApp = openWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+         router.push(`/${nextActiveApp.id}`, { scroll: false });
+      }
+      setLastClosedAppId(null); // Reset after handling
+    }
+  }, [openWindows, activeAppId, lastClosedAppId, router]);
+
 
   const focusApp = useCallback((id: AppID) => {
     if (activeAppId === id) return;
@@ -123,24 +142,24 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, [apps, openWindows, zCounter, focusApp, router]);
 
   const closeApp = useCallback((id: AppID) => {
-    setOpenWindows(current => {
-      const remainingWindows = current.filter(w => w.id !== id);
-      if (remainingWindows.length === 0) {
-        router.push('/', { scroll: false });
-      } else if (activeAppId === id) {
-        const nextActiveApp = remainingWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-        router.push(`/${nextActiveApp.id}`, { scroll: false });
-      }
-      return remainingWindows;
-    });
-  }, [activeAppId, router]);
-
+    setLastClosedAppId(id);
+    setOpenWindows(current => current.filter(w => w.id !== id));
+  }, []);
 
   const minimizeApp = useCallback((id: AppID) => {
     setOpenWindows(current =>
       current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
-  }, []);
+    if (activeAppId === id) {
+       const otherWindows = openWindows.filter(w => w.id !== id && !w.isMinimized);
+       if (otherWindows.length > 0) {
+         const nextActiveApp = otherWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+         router.push(`/${nextActiveApp.id}`, { scroll: false });
+       } else {
+         router.push(`/`, { scroll: false });
+       }
+    }
+  }, [activeAppId, openWindows, router]);
 
   const toggleMaximize = useCallback((id: AppID) => {
     setOpenWindows(current =>
