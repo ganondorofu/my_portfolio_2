@@ -65,23 +65,25 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     if (lastClosedAppId) {
-      if (openWindows.length === 0) {
-        router.push('/', { scroll: false });
+      const remainingWindows = openWindows.filter(w => !w.isMinimized);
+      if (remainingWindows.length === 0) {
+        if (openWindows.length > 0) {
+          // All are minimized
+           router.push('/', { scroll: false });
+        } else {
+           // All windows closed
+           router.push('/', { scroll: false });
+        }
       } else if (activeAppId && activeAppId !== lastClosedAppId) {
          router.push(`/${activeAppId}`, { scroll: false });
       } else {
-         const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
-         if (nonMinimizedWindows.length > 0) {
-            const nextActiveApp = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-            router.push(`/${nextActiveApp.id}`, { scroll: false });
-         } else {
-            router.push(`/`, { scroll: false });
-         }
+         const nextActiveApp = remainingWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+         router.push(`/${nextActiveApp.id}`, { scroll: false });
       }
       setLastClosedAppId(null); 
     }
-  }, [openWindows, activeAppId, lastClosedAppId, router]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openWindows, lastClosedAppId]);
 
   const focusApp = useCallback((id: AppID) => {
     if (activeAppId === id) return;
@@ -122,13 +124,13 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     
         const vw = window.innerWidth;
         const vh = window.innerHeight;
-        const initialWidth = 800;
-        const initialHeight = 600;
+        const initialWidth = Math.min(800, vw * 0.8);
+        const initialHeight = Math.min(600, vh * 0.7);
         const xOffset = (openWindows.length % 5) * 30;
         const yOffset = (openWindows.length % 5) * 30;
         const initialPosition = {
           x: Math.max(0, vw / 2 - initialWidth / 2 + xOffset),
-          y: Math.max(0, vh / 3 - initialHeight / 2 + yOffset),
+          y: Math.max(2, (vh - 32) / 2 - initialHeight / 2 + yOffset), // 32 is header height
         };
 
         const newWindow: WindowState = {
@@ -176,9 +178,10 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleLogin = useCallback(() => {
+    if (isLoggedIn) return;
     setIsLoggedIn(true);
     openApp('profile');
-  }, [openApp]);
+  }, [isLoggedIn, openApp]);
 
   const contextValue: AppManagerContextType = {
     openWindows,
