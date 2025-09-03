@@ -187,8 +187,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback(() => {
     if (isLoggedIn) return;
     setIsLoggedIn(true);
-    openApp('profile');
-  }, [isLoggedIn, openApp]);
+  }, [isLoggedIn]);
 
   const contextValue: AppManagerContextType = {
     openWindows,
