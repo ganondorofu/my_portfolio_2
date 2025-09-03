@@ -1,4 +1,4 @@
-import type { ProfileData, Project, SkillCategory, Achievement, Commit } from './types';
+import type { ProfileData, Project, SkillCategory, Achievement, HistoryEntry } from './types';
 
 export const profileData: ProfileData = {
   name: 'komeniki',
@@ -177,41 +177,25 @@ export const achievementsData: Achievement[] = [
     },
 ];
 
-export const historyData: Commit[] = [
+export const historyData: HistoryEntry[] = [
   {
-    hash: 'b1a2c3d4',
-    author: 'komeniki',
+    version: '1.2.0',
+    date: '2024-07-31',
+    description: '更新履歴アプリをシンプルなテーブル形式に変更',
+  },
+  {
+    version: '1.1.1',
+    date: '2024-07-30',
+    description: 'ウィンドウのちらつきに関する複数のバグを修正',
+  },
+  {
+    version: '1.1.0',
     date: '2024-07-29',
-    message: 'feat: Add History App and fix window flicker',
+    description: 'ウィンドウ開閉時のアニメーションを追加',
   },
   {
-    hash: 'e5f6g7h8',
-    author: 'komeniki',
+    version: '1.0.0',
     date: '2024-07-28',
-    message: 'fix: Resolve window position race condition',
-  },
-  {
-    hash: 'i9j0k1l2',
-    author: 'komeniki',
-    date: '2024-07-27',
-    message: 'style: Implement window animations',
-  },
-  {
-    hash: 'm3n4o5p6',
-    author: 'komeniki',
-    date: '2024-07-26',
-    message: 'fix: Correct direct URL access behavior',
-  },
-  {
-    hash: 'q7r8s9t0',
-    author: 'komeniki',
-    date: '2024-07-25',
-    message: 'refactor: Simplify state management',
-  },
-  {
-    hash: 'u1v2w3x4',
-    author: 'komeniki',
-    date: '2024-07-24',
-    message: 'feat: Initial project setup with OS-like UI',
+    description: 'OSライクなUIでポートフォリオを初期構築',
   },
 ];
