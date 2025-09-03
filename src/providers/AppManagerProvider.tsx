@@ -150,14 +150,16 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     setOpenWindows(current =>
       current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
-    if (activeAppId === id) {
-       const otherWindows = openWindows.filter(w => w.id !== id && !w.isMinimized);
-       if (otherWindows.length > 0) {
-         const nextActiveApp = otherWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-         router.push(`/${nextActiveApp.id}`, { scroll: false });
-       } else {
-         router.push(`/`, { scroll: false });
-       }
+     // After minimizing, we need to figure out the next active app and set the URL.
+     // This is now handled by the useEffect that watches [openWindows]
+    const otherWindows = openWindows.filter(w => w.id !== id && !w.isMinimized);
+    if (activeAppId === id) { // Only change URL if the active app was minimized
+      if (otherWindows.length > 0) {
+        const nextActiveApp = otherWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+        router.push(`/${nextActiveApp.id}`, { scroll: false });
+      } else {
+        router.push(`/`, { scroll: false });
+      }
     }
   }, [activeAppId, openWindows, router]);
 
