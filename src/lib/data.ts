@@ -1,4 +1,4 @@
-import type { ProfileData, Project, SkillCategory, Achievement, HistoryEntry } from './types';
+import type { ProfileData, Project, SkillCategory, Achievement, Commit } from './types';
 
 export const profileData: ProfileData = {
   name: 'komeniki',
@@ -177,25 +177,29 @@ export const achievementsData: Achievement[] = [
     },
 ];
 
-export const historyData: HistoryEntry[] = [
+export const historyData: Commit[] = [
   {
-    version: '1.2.0',
-    date: '2024-07-31',
-    description: '更新履歴アプリをシンプルなテーブル形式に変更',
+    hash: 'a1b2c3d4',
+    author: 'komeniki',
+    date: '2024-07-31T12:00:00Z',
+    message: 'feat: Add History App with Git style',
   },
   {
-    version: '1.1.1',
-    date: '2024-07-30',
-    description: 'ウィンドウのちらつきに関する複数のバグを修正',
+    hash: 'e5f6g7h8',
+    author: 'komeniki',
+    date: '2024-07-30T18:30:00Z',
+    message: 'fix(ui): Resolve multiple window rendering bugs',
   },
   {
-    version: '1.1.0',
-    date: '2024-07-29',
-    description: 'ウィンドウ開閉時のアニメーションを追加',
+    hash: 'i9j0k1l2',
+    author: 'komeniki',
+    date: '2024-07-29T09:15:00Z',
+    message: 'feat(ui): Implement window open/close animations',
   },
   {
-    version: '1.0.0',
-    date: '2024-07-28',
-    description: 'OSライクなUIでポートフォリオを初期構築',
+    hash: 'm3n4o5p6',
+    author: 'komeniki',
+    date: '2024-07-28T22:00:00Z',
+    message: 'chore: Initial portfolio setup with OS-like UI',
   },
 ];
