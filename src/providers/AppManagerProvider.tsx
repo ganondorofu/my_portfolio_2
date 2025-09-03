@@ -63,21 +63,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, [openWindows]);
 
   useEffect(() => {
-    // This effect synchronizes the URL with the active window state.
-    const currentAppId = params.appId as AppID | undefined;
-
-    if (isLoggedIn) {
-      if (activeAppId && currentAppId !== activeAppId) {
-        router.push(`/${activeAppId}`, { scroll: false });
-      } else if (!activeAppId && openWindows.length === 0 && currentAppId) {
-         // All windows are closed or minimized
-        router.push('/', { scroll: false });
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeAppId, isLoggedIn]);
-
-  useEffect(() => {
     const windowsToClose = openWindows.filter(w => w.isClosing);
     if (windowsToClose.length > 0) {
       const timer = setTimeout(() => {
@@ -128,24 +113,23 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             const newZ = prevZ + 1;
     
             let position;
-            if (typeof window !== 'undefined') {
-              const vw = window.innerWidth;
-              const vh = window.innerHeight;
-              const headerHeight = 32;
-              const dockWidth = 96;
+            // This now runs only on the client, preventing SSR issues.
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const headerHeight = 32;
+            const dockWidth = 96;
 
-              const initialWidth = Math.min(800, vw - dockWidth - 20);
-              const initialHeight = Math.min(600, vh - headerHeight - 20);
-              
-              const windowIndex = openWindows.length;
-              const xOffset = (windowIndex % 5) * 30;
-              const yOffset = (windowIndex % 5) * 30;
+            const initialWidth = Math.min(800, vw - dockWidth - 20);
+            const initialHeight = Math.min(600, vh - headerHeight - 20);
+            
+            const windowIndex = openWindows.length;
+            const xOffset = (windowIndex % 5) * 30;
+            const yOffset = (windowIndex % 5) * 30;
 
-              position = {
-                x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-                y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
-              };
-            }
+            position = {
+              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
+              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+            };
            
             const newWindow: WindowState = {
                 id,
@@ -160,9 +144,10 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             };
             
             setOpenWindows(current => {
-              // Final check to prevent race conditions
               if (current.some(w => w.id === id)) {
-                return current;
+                 // In case of a race condition, focus the existing window
+                 focusApp(id);
+                 return current;
               }
               return [...current, newWindow];
             });
@@ -170,7 +155,6 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             return newZ;
         });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apps, openWindows, focusApp]);
 
   const closeApp = useCallback((id: AppID) => {
@@ -205,11 +189,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback(() => {
     if (isLoggedIn) return;
     setIsLoggedIn(true);
-    const appId = params.appId as AppID;
-    if (appId && apps[appId] && appId !== 'profile') {
-      openApp(appId);
-    }
-  }, [isLoggedIn, params.appId, apps, openApp]);
+  }, [isLoggedIn]);
 
   const contextValue: AppManagerContextType = {
     openWindows,
