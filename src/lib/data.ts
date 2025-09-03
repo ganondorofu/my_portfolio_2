@@ -181,25 +181,25 @@ export const historyData: Commit[] = [
   {
     hash: 'a1b2c3d4',
     author: 'komeniki',
-    date: '2024-07-31T12:00:00Z',
-    message: 'feat: Add History App with Git style',
+    date: '2024-07-31',
+    message: 'Git風のUIで「更新履歴」アプリを実装しました。',
   },
   {
     hash: 'e5f6g7h8',
     author: 'komeniki',
-    date: '2024-07-30T18:30:00Z',
-    message: 'fix(ui): Resolve multiple window rendering bugs',
+    date: '2024-07-30',
+    message: 'ウィンドウのちらつきに関する複数の視覚的なバグを修正しました。',
   },
   {
     hash: 'i9j0k1l2',
     author: 'komeniki',
-    date: '2024-07-29T09:15:00Z',
-    message: 'feat(ui): Implement window open/close animations',
+    date: '2024-07-29',
+    message: 'ウィンドウの開閉、最大化・最小化にアニメーションを追加しました。',
   },
   {
     hash: 'm3n4o5p6',
     author: 'komeniki',
-    date: '2024-07-28T22:00:00Z',
-    message: 'chore: Initial portfolio setup with OS-like UI',
+    date: '2024-07-28',
+    message: 'ポートフォリオの初期セットアップと、OS風UIの最初のバージョンを公開しました。',
   },
 ];
