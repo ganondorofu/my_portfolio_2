@@ -94,13 +94,13 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
     
     setDrawerOpen(false);
 
-    const isAlreadyOpen = openWindows.some(w => w.id === id);
-    if (isAlreadyOpen) {
+    const existingWindow = openWindows.find(w => w.id === id);
+    
+    if (existingWindow) {
       focusApp(id);
     } else {
         setZCounter(prevZ => {
             const newZ = prevZ + 1;
-
             let position;
             if(typeof window !== 'undefined') {
                 const vw = window.innerWidth;
@@ -133,14 +133,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
                 },
             };
             
-            setOpenWindows(current => {
-              if (current.some(w => w.id === id)) {
-                 focusApp(id);
-                 return current;
-              }
-              return [...current, newWindow];
-            });
-
+            setOpenWindows(current => [...current, newWindow]);
             return newZ;
         });
     }
@@ -178,6 +171,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const handleLogin = useCallback(() => {
     if (isLoggedIn) return;
     setIsLoggedIn(true);
+    // Open profile by default after login
+    // This was removed to allow direct navigation to apps
   }, [isLoggedIn]);
 
   const contextValue: AppManagerContextType = {
