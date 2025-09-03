@@ -71,7 +71,9 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   const focusApp = useCallback((id: AppID) => {
     setOpenWindows(currentWindows => {
       const isAlreadyFocused = activeAppId === id;
-      if (isAlreadyFocused) return currentWindows;
+      if (isAlreadyFocused && !currentWindows.find(w => w.id === id)?.isMinimized) {
+        return currentWindows;
+      }
       
       const newZ = zCounter + 1;
       setZCounter(newZ);
@@ -99,34 +101,35 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
       const existingWindow = current.find(w => w.id === id);
       
       if (existingWindow) {
-        // If window exists, just focus it.
         const newZ = zCounter + 1;
         setZCounter(newZ);
         return current.map(w =>
           w.id === id ? { ...w, zIndex: newZ, isMinimized: false } : w
         );
       } else {
-        // If window doesn't exist, create it.
         const newZ = zCounter + 1;
         setZCounter(newZ);
         
         let position;
+        const initialWidth = 800;
+        const initialHeight = 600;
+
         if (typeof window !== 'undefined') {
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const headerHeight = 32;
             const dockWidth = 96;
 
-            const initialWidth = Math.min(800, vw - dockWidth - 40);
-            const initialHeight = Math.min(600, vh - headerHeight - 40);
-            
+            const spawnableWidth = vw - dockWidth;
+            const spawnableHeight = vh - headerHeight;
+
             const windowIndex = current.length;
             const xOffset = (windowIndex % 5) * 30;
             const yOffset = (windowIndex % 5) * 30;
 
             position = {
-              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
+              x: Math.max(0, (spawnableWidth - initialWidth) / 2 + xOffset),
+              y: Math.max(0, (spawnableHeight - initialHeight) / 2 + yOffset),
             };
         }
        
@@ -137,8 +140,8 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             zIndex: newZ,
             position: position,
             size: { 
-              width: 800, 
-              height: 600,
+              width: initialWidth,
+              height: initialHeight,
             },
         };
         
