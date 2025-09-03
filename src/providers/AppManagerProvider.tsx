@@ -64,33 +64,27 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, [openWindows]);
   
   useEffect(() => {
-    if (lastInteractedAppId) {
-        const currentActiveApp = openWindows.find(w => w.id === activeAppId);
-        if (currentActiveApp && !currentActiveApp.isMinimized) {
-            if (params.appId !== activeAppId) {
-                router.push(`/${activeAppId}`, { scroll: false });
-            }
-        } else {
-            const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
-            if (nonMinimizedWindows.length > 0) {
-                const nextActiveApp = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
-                if (nextActiveApp && params.appId !== nextActiveApp.id) {
-                    router.push(`/${nextActiveApp.id}`, { scroll: false });
-                }
-            } else {
-                if (params.appId !== undefined) {
-                    router.push('/', { scroll: false });
-                }
-            }
-        }
-        setLastInteractedAppId(null);
+    // This effect synchronizes the URL with the active window state.
+    const nonMinimizedWindows = openWindows.filter(w => !w.isMinimized);
+    if (nonMinimizedWindows.length === 0) {
+      // If no windows are open (or all are minimized), go to the home/desktop view.
+      if (params.appId) {
+          router.push('/', { scroll: false });
+      }
+    } else {
+      // If there are open windows, ensure the URL matches the active (top-most) one.
+      const topWindow = nonMinimizedWindows.reduce((prev, curr) => (prev.zIndex > curr.zIndex ? prev : curr));
+      if (topWindow && params.appId !== topWindow.id) {
+        router.push(`/${topWindow.id}`, { scroll: false });
+      }
     }
+  // This hook should run when the openWindows array changes, or when the appId param changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openWindows, lastInteractedAppId, activeAppId]);
+  }, [openWindows, params.appId]);
 
 
   useEffect(() => {
-    const windowsToClose = openWindows.filter(w => w.isClosing || w.isMinimized);
+    const windowsToClose = openWindows.filter(w => w.isClosing);
     if (windowsToClose.length > 0) {
       const timer = setTimeout(() => {
         setOpenWindows(current => current.filter(w => !w.isClosing));
@@ -148,31 +142,28 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
         setZCounter(prevZ => {
             const newZ = prevZ + 1;
     
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
+            // On the server, we don't know the window size.
+            // These will be defined on the client in AppWindow.
+            const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+            const vh = typeof window !== 'undefined' ? window.innerHeight : 0;
             const headerHeight = 32;
             const dockWidth = 96;
-            
+
             const initialWidth = Math.min(800, vw - dockWidth - 20);
             const initialHeight = Math.min(600, vh - headerHeight - 20);
-            const xOffset = (openWindows.length % 5) * 30;
-            const yOffset = (openWindows.length % 5) * 30;
-            
-            const initialPosition = {
-              x: Math.max(0, (vw - dockWidth - initialWidth) / 2 + xOffset),
-              y: Math.max(0, (vh - headerHeight - initialHeight) / 2 + yOffset),
-            };
-
+           
             const newWindow: WindowState = {
                 id,
                 isMinimized: false,
                 isMaximized: false,
                 zIndex: newZ,
-                position: initialPosition,
+                // Position is now set in the AppWindow component to avoid SSR issues
+                position: undefined, 
                 size: { width: initialWidth, height: initialHeight },
             };
             
             setOpenWindows(current => {
+              // Final check to prevent race conditions from adding duplicates
               if (current.some(w => w.id === id)) {
                 return current;
               }
@@ -188,14 +179,12 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
   }, [apps, openWindows, focusApp, router, params.appId]);
 
   const closeApp = useCallback((id: AppID) => {
-    setLastInteractedAppId(id);
     setOpenWindows(current => current.map(w => w.id === id ? { ...w, isClosing: true } : w));
   }, []);
 
   const minimizeApp = useCallback((id: AppID) => {
-    setLastInteractedAppId(id);
     setOpenWindows(current =>
-      current.map(w => (w.id === id ? { ...w, isMinimized: true, isClosing: true } : w))
+      current.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
     );
   }, []);
 
