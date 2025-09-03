@@ -1,7 +1,7 @@
 
 'use client';
 
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Minus, Square } from 'lucide-react';
@@ -33,6 +33,12 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
     updateWindowPosition, 
     updateWindowSize,
   } = useAppManager();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const isTerminal = appId === 'profile';
   const isMobile = useIsMobile();
   const nodeRef = useRef(null);
@@ -56,6 +62,8 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   if (windowState.isMinimized || !windowState.position) {
     return null; // Don't render if minimized or position is not yet calculated
   }
+  
+  const animationClass = isMounted && !windowState.isClosing ? "animate-window-open" : windowState.isClosing ? "animate-window-close" : "";
 
   const windowContent = (
       <Card
@@ -67,7 +75,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
           isTerminal ? 'border-2 border-primary/50' : 'border',
           isActive ? 'shadow-primary/50' : 'shadow-black/50',
           cardBgClass,
-          windowState.isClosing ? "animate-window-close" : "animate-window-open"
+          animationClass
         )}
       >
         <CardHeader className={cn(

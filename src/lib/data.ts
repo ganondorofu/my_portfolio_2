@@ -1,11 +1,11 @@
-import type { ProfileData, Project, SkillCategory, Achievement } from './types';
+import type { ProfileData, Project, SkillCategory, Achievement, Commit } from './types';
 
 export const profileData: ProfileData = {
   name: 'komeniki',
   title: '学生 / ホビイスト開発者',
   school: '愛知県立愛知総合工科高等学校',
   affiliation: 'STEM研究部',
-  email: 'ganondorofu3143@outlook.com',
+  email: 'contact@mail.komeniki.net',
   github: '@ganondorofu',
   learningPolicy: [
     {
@@ -175,4 +175,43 @@ export const achievementsData: Achievement[] = [
         },
       ],
     },
+];
+
+export const historyData: Commit[] = [
+  {
+    hash: 'b1a2c3d4',
+    author: 'komeniki',
+    date: '2024-07-29',
+    message: 'feat: Add History App and fix window flicker',
+  },
+  {
+    hash: 'e5f6g7h8',
+    author: 'komeniki',
+    date: '2024-07-28',
+    message: 'fix: Resolve window position race condition',
+  },
+  {
+    hash: 'i9j0k1l2',
+    author: 'komeniki',
+    date: '2024-07-27',
+    message: 'style: Implement window animations',
+  },
+  {
+    hash: 'm3n4o5p6',
+    author: 'komeniki',
+    date: '2024-07-26',
+    message: 'fix: Correct direct URL access behavior',
+  },
+  {
+    hash: 'q7r8s9t0',
+    author: 'komeniki',
+    date: '2024-07-25',
+    message: 'refactor: Simplify state management',
+  },
+  {
+    hash: 'u1v2w3x4',
+    author: 'komeniki',
+    date: '2024-07-24',
+    message: 'feat: Initial project setup with OS-like UI',
+  },
 ];
