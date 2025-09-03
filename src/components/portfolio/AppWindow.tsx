@@ -68,7 +68,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
   const windowContent = (
       <Card
         data-window-id={appId}
-        onMouseDown={() => focusApp(appId)}
+        onMouseDownCapture={() => focusApp(appId)}
         className={cn(
           "flex flex-col overflow-hidden shadow-2xl w-full h-full",
           isMaximized ? 'rounded-none border-0' : 'rounded-lg',
@@ -161,6 +161,7 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
       position={windowState.position}
       onDrag={handleDrag}
       cancel=".no-drag"
+      onStart={() => focusApp(appId)}
     >
         <div ref={nodeRef} 
           className={cn(
