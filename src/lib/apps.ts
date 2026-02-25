@@ -14,50 +14,58 @@ export const apps: Record<AppID, App> = {
   profile: {
     id: 'profile',
     title: 'プロフィール (Profile)',
-    icon: 'User',
-    iconColor: 'text-sky-400',
+    // Ubuntu ターミナルのダーク・オーバージン
+    icon: 'Terminal',
+    iconBg: ['#5C2D72', '#300A24'],
   },
   projects: {
     id: 'projects',
     title: 'プロジェクト (Projects)',
-    icon: 'Folder',
-    iconColor: 'text-amber-500',
+    // Nautilus (ファイルマネージャ) のブルー系
+    icon: 'FolderOpen',
+    iconBg: ['#3584E4', '#1565C0'],
   },
   skills: {
     id: 'skills',
     title: 'スキル (Skills)',
-    icon: 'Wrench',
-    iconColor: 'text-teal-400',
+    // GNOME Settings のウォームグレー
+    icon: 'Settings2',
+    iconBg: ['#767677', '#3D3D3D'],
   },
   achievements: {
     id: 'achievements',
     title: '実績 (Achievements)',
-    icon: 'Award',
-    iconColor: 'text-yellow-400',
+    // トロフィー → アンバー〜オレンジ
+    icon: 'Trophy',
+    iconBg: ['#FFA726', '#E65100'],
   },
   history: {
     id: 'history',
     title: '更新履歴 (History)',
-    icon: 'GitCommitHorizontal',
-    iconColor: 'text-green-400',
+    // バージョン管理 → グリーン系
+    icon: 'History',
+    iconBg: ['#4CAF50', '#1B5E20'],
   },
   contact: {
     id: 'contact',
     title: 'お問い合わせ (Contact)',
+    // Thunderbird / メール → 深いブルー
     icon: 'Mail',
-    iconColor: 'text-lime-500',
+    iconBg: ['#42A5F5', '#0D47A1'],
   },
   github: {
     id: 'github',
     title: 'GitHub',
+    // GitHub ダークテーマ
     icon: 'Github',
-    iconColor: 'text-neutral-400',
+    iconBg: ['#444D56', '#1C2128'],
     externalUrl: 'https://github.com/ganondorofu',
   },
   'show-apps': {
     id: 'show-apps',
     title: 'Show Applications',
+    // Ubuntu パープル
     icon: 'Grid3x3',
-    iconColor: 'text-rose-500',
+    iconBg: ['#9C27B0', '#4A1942'],
   },
 };

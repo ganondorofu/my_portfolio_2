@@ -5,6 +5,7 @@ import { profileData } from '@/lib/data';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Loader2, User } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import LoginHeader from './LoginHeader';
 
@@ -53,15 +54,27 @@ export default function LoginScreen({ onLoginComplete }: LoginScreenProps) {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex flex-col bg-[#2C001E] text-white transition-opacity duration-500',
+        'fixed inset-0 z-50 flex flex-col text-white transition-opacity duration-500',
         showDesktop ? 'opacity-0' : 'opacity-100'
       )}
+      style={{
+        background:
+          'radial-gradient(ellipse 80% 60% at 20% 30%, rgba(119,41,83,0.55) 0%, transparent 70%), ' +
+          'linear-gradient(160deg, #1A0010 0%, #2C001E 40%, #4A1040 70%, #772953 90%, #9B3060 100%)',
+      }}
     >
       <LoginHeader />
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex w-80 flex-col items-center gap-4">
-          <div className="flex h-32 w-32 items-center justify-center rounded-full bg-black/30">
-            <User className="h-20 w-20 text-gray-400" />
+          {/* Ubuntu ログイン画面スタイルのアバター */}
+          <div className="relative h-32 w-32 overflow-hidden rounded-full border-2 border-white/20 shadow-lg">
+            <Image
+              src="/avatar.png"
+              alt={profileData.name}
+              fill
+              className="object-cover"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
           </div>
           <h1 className="text-2xl font-medium">{profileData.name}</h1>
           <form
