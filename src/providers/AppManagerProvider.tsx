@@ -118,7 +118,7 @@ export function AppManagerProvider({ children }: { children: ReactNode }) {
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const headerHeight = 32;
-            const dockWidth = 96;
+            const dockWidth = 72;
 
             const spawnableWidth = vw - dockWidth;
             const spawnableHeight = vh - headerHeight;
