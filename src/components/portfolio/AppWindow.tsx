@@ -94,43 +94,34 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
           {/* 左の余白 (ボタン幅分のプレースホルダ) */}
           <div className="flex-1" />
 
-          {/* Ubuntu GNOME Yaru スタイルのウィンドウコントロール (右側) */}
-          <div className="relative z-10 flex items-center gap-1.5">
-            {/* 最小化 : 黄 */}
-            <Button
-              variant="ghost"
-              size="icon"
+          {/* Ubuntu GNOME Yaru ウィンドウコントロール (右側) */}
+          <div className="window-controls relative z-10 flex items-center gap-2">
+            {/* 最小化 */}
+            <button
               title="最小化"
-              className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#e0a800]/60"
-              style={{ background: 'linear-gradient(145deg, #ffc107, #e0a800)' }}
               onClick={() => minimizeApp(appId)}
+              className="window-btn window-btn-minimize no-drag"
             >
-              <Minus className="size-2.5 text-black/60" />
-            </Button>
-            {/* 最大化 : 緑 */}
+              <Minus className="window-btn-icon" />
+            </button>
+            {/* 最大化 */}
             {!isMobile && (
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 title="最大化"
-                className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#1e7e34]/60"
-                style={{ background: 'linear-gradient(145deg, #28a745, #1e7e34)' }}
                 onClick={() => toggleMaximize(appId)}
+                className="window-btn window-btn-maximize no-drag"
               >
-                <Square className="size-2.5 text-white/80" />
-              </Button>
+                <Square className="window-btn-icon" />
+              </button>
             )}
-            {/* 閉じる : 赤 */}
-            <Button
-              variant="ghost"
-              size="icon"
+            {/* 閉じる */}
+            <button
               title="閉じる"
-              className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#c0392b]/60"
-              style={{ background: 'linear-gradient(145deg, #f44336, #c0392b)' }}
               onClick={() => closeApp(appId)}
+              className="window-btn window-btn-close no-drag"
             >
-              <X className="size-2.5 text-white/80" />
-            </Button>
+              <X className="window-btn-icon" />
+            </button>
           </div>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-0">

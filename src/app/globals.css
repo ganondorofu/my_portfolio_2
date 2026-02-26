@@ -96,3 +96,65 @@
     background: hsl(var(--primary));
   }
 }
+
+/* ─── Ubuntu GNOME ウィンドウコントロールボタン ─── */
+.window-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: filter 0.12s ease, box-shadow 0.12s ease;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  position: relative;
+}
+
+.window-btn-icon {
+  width: 8px;
+  height: 8px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+/* ホバーでアイコン表示 (GNOME Adwaita 風) */
+.window-controls:hover .window-btn-icon {
+  opacity: 1;
+}
+
+.window-btn:hover {
+  filter: brightness(1.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.window-btn:active {
+  filter: brightness(0.85);
+}
+
+/* 閉じる : 赤 */
+.window-btn-close {
+  background: linear-gradient(180deg, #f66151, #e01b24);
+}
+.window-btn-close .window-btn-icon {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 最小化 : 黄 / アンバー */
+.window-btn-minimize {
+  background: linear-gradient(180deg, #f8e45c, #e5a50a);
+}
+.window-btn-minimize .window-btn-icon {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* 最大化 : 緑 */
+.window-btn-maximize {
+  background: linear-gradient(180deg, #57e389, #33d17a);
+}
+.window-btn-maximize .window-btn-icon {
+  color: rgba(0, 0, 0, 0.55);
+}
