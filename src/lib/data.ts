@@ -130,6 +130,16 @@ export const achievementsData: Achievement[] = [
       category: '競技・コンテスト',
       items: [
         {
+          title: '全国高等学校AIアスリート選手権大会シンギュラリティバトルクエスト2025',
+          details: 'XQ 優勝, AQ 決勝進出',
+          date: '2025年',
+        },
+        {
+          title: '防衛省サイバーコンテスト2026',
+          details: '117位',
+          date: '2026年',
+        },
+        {
           title: '全国高等学校AIアスリート選手権大会シンギュラリティバトルクエスト2024',
           details: 'AQ（二次予選通過）, XQ（決勝出場）, DQ（第2位）',
           date: '2024年',
