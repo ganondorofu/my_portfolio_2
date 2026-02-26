@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import Clock from './Clock';
 import SystemMenu from './SystemMenu';
+import CalendarPopup from './CalendarPopup';
 import { useAppManager } from '@/hooks/useAppManager';
 
 export default function Header() {
   const { setDrawerOpen } = useAppManager();
+  const [calOpen, setCalOpen] = useState(false);
 
   return (
     <header className="relative z-50 flex h-7 w-full shrink-0 items-center justify-between bg-[#1a1a1a] px-3 text-[13px] font-medium text-white/90 shadow-md">
@@ -19,11 +22,15 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 中央時計 */}
-      <div className="flex w-1/3 justify-center">
-        <button className="rounded px-2.5 py-0.5 transition-colors hover:bg-white/15">
+      {/* 中央時計 → クリックでカレンダー */}
+      <div className="relative flex w-1/3 justify-center">
+        <button
+          onClick={() => setCalOpen((v) => !v)}
+          className="rounded px-2.5 py-0.5 transition-colors hover:bg-white/15"
+        >
           <Clock />
         </button>
+        {calOpen && <CalendarPopup onClose={() => setCalOpen(false)} />}
       </div>
 
       {/* システムインジケーター */}
