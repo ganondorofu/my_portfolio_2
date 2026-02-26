@@ -45,56 +45,57 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
     const open = isAppOpen(app.id);
 
     return (
-      <button
-        aria-label={`Open ${app.title}`}
-        onClick={() => handleAppClick(app)}
-        className={cn(
-          'relative flex h-16 w-16 items-center justify-center rounded-xl',
-          'transition-all duration-150 ease-out',
-          'hover:scale-110 focus:outline-none',
-          'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
-          active
-            ? 'scale-[1.08] drop-shadow-[0_0_8px_rgba(233,84,32,0.7)]'
-            : ''
-        )}
-      >
-        {/* Ubuntu Yaru スタイルのアイコン */}
-        <UbuntuAppIcon
-          icon={app.icon}
-          iconBg={app.iconBg}
-          size={52}
-        />
-
-        {/* 開いているアプリのドット (Ubuntu Dock スタイル) */}
+      <div className="relative flex items-center">
+        {/* 左側のランニングインジケーター (Ubuntu Dock スタイル) */}
         {open && !isSpecialButton && (
           <span
             className={cn(
-              'absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full',
+              'absolute -left-[7px] rounded-r-full transition-all duration-200',
               active
-                ? 'h-1.5 w-1.5 bg-[#E95420]'
-                : 'h-1 w-1 bg-white/60'
+                ? 'h-5 w-[3px] bg-[#E95420]'
+                : 'h-2 w-[3px] bg-white/50'
             )}
           />
         )}
-      </button>
+        <button
+          aria-label={`Open ${app.title}`}
+          onClick={() => handleAppClick(app)}
+          className={cn(
+            'relative flex h-[58px] w-[58px] items-center justify-center rounded-xl',
+            'transition-all duration-150 ease-out',
+            'hover:scale-110 focus:outline-none',
+            'focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50',
+            active && 'brightness-110',
+          )}
+        >
+          <UbuntuAppIcon
+            icon={app.icon}
+            iconBg={app.iconBg}
+            size={48}
+          />
+        </button>
+      </div>
     );
   };
 
   return (
     <TooltipProvider>
-      <aside className="z-50 flex shrink-0 flex-col items-center">
-        {/* Ubuntu Dock : 半透明ダークパネル + 細いハイライトボーダー */}
+      {/* 幅の確保 (内側のフローティング Dock 用) */}
+      <aside className="z-50 flex w-[72px] shrink-0 flex-col items-center py-2">
+        {/* Ubuntu 22.04 フローティング Dock パネル */}
         <div
-          className="flex h-full w-[72px] flex-col items-center justify-between py-3"
+          className="flex flex-col items-center justify-between rounded-xl py-2"
           style={{
             background:
-              'linear-gradient(180deg, rgba(30,10,24,0.85) 0%, rgba(44,0,30,0.88) 100%)',
-            borderRight: '1px solid rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+              'linear-gradient(180deg, rgba(30,10,24,0.82) 0%, rgba(44,0,30,0.86) 100%)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
           }}
         >
-          <div className="flex flex-col items-center gap-1">
+          {/* アプリアイコン */}
+          <div className="flex flex-col items-center gap-0.5 px-[10px]">
             {apps.map((app) => (
               <React.Fragment key={app.id}>
                 <Tooltip>
@@ -106,14 +107,16 @@ export default function Dock({ apps, showAppsButton }: DockProps) {
                   </TooltipContent>
                 </Tooltip>
                 {app.id === 'contact' && (
-                  <Separator className="my-1.5 h-px w-10 bg-white/15" />
+                  <Separator className="my-1 h-px w-9 bg-white/15" />
                 )}
               </React.Fragment>
             ))}
           </div>
 
-          <div className="flex flex-col items-center gap-1">
-            <Separator className="my-1.5 h-px w-10 bg-white/15" />
+          <Separator className="my-1.5 h-px w-9 bg-white/15" />
+
+          {/* Show Apps ボタン */}
+          <div className="flex flex-col items-center px-[10px]">
             <Tooltip>
               <TooltipTrigger asChild>
                 <AppButton app={showAppsButton} />

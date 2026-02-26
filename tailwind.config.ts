@@ -21,7 +21,7 @@ const config = {
       fontFamily: {
         body: ['Ubuntu', 'sans-serif'],
         headline: ['Ubuntu', 'sans-serif'],
-        code: ['monospace'],
+        code: ['"Ubuntu Mono"', 'monospace'],
       },
       colors: {
         border: 'hsl(var(--border))',
