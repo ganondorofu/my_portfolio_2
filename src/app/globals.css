@@ -69,7 +69,11 @@
 }
 
 .desktop-background {
-  background: linear-gradient(135deg, #2C001E, #772953 70%, #E95420 97%);
+  /* Ubuntu 22.04 Yaru 壁紙に近い purple → aubergine → orange グラデーション */
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(119, 41, 83, 0.6) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(233, 84, 32, 0.45) 0%, transparent 65%),
+    linear-gradient(160deg, #1A0010 0%, #2C001E 35%, #4A1040 65%, #772953 85%, #C0401A 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

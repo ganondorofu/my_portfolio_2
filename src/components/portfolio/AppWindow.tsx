@@ -78,39 +78,58 @@ export default function AppWindow({ appId, title, children, windowState }: AppWi
           animationClass
         )}
       >
+        {/* Ubuntu GNOME ヘッダー: タイトル中央・ボタン右 */}
         <CardHeader className={cn(
-          "flex flex-row items-center justify-between space-y-0 p-2 pl-4 cursor-move",
+          "relative flex flex-row items-center space-y-0 px-3 py-1.5 cursor-move",
           headerBgClass
         )}>
-          <h3 className={cn("font-bold text-sm", textColorClass)}>
+          {/* タイトル (中央揃え、絶対配置) */}
+          <h3 className={cn(
+            "pointer-events-none absolute inset-x-0 text-center text-xs font-medium",
+            textColorClass
+          )}>
             {title}
           </h3>
-          <div className="flex items-center justify-end gap-2">
-             <Button
+
+          {/* 左の余白 (ボタン幅分のプレースホルダ) */}
+          <div className="flex-1" />
+
+          {/* Ubuntu GNOME Yaru スタイルのウィンドウコントロール (右側) */}
+          <div className="relative z-10 flex items-center gap-1.5">
+            {/* 最小化 : 黄 */}
+            <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default no-drag"
+              title="最小化"
+              className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#e0a800]/60"
+              style={{ background: 'linear-gradient(145deg, #ffc107, #e0a800)' }}
               onClick={() => minimizeApp(appId)}
             >
-               <Minus className="size-3 text-white" />
+              <Minus className="size-2.5 text-black/60" />
             </Button>
+            {/* 最大化 : 緑 */}
             {!isMobile && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="size-6 rounded-full bg-neutral-600 hover:bg-neutral-700 !cursor-default no-drag"
+                title="最大化"
+                className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#1e7e34]/60"
+                style={{ background: 'linear-gradient(145deg, #28a745, #1e7e34)' }}
                 onClick={() => toggleMaximize(appId)}
               >
-                <Square className="size-3 text-white" />
+                <Square className="size-2.5 text-white/80" />
               </Button>
             )}
+            {/* 閉じる : 赤 */}
             <Button
               variant="ghost"
               size="icon"
-              className="size-6 rounded-full bg-red-500 hover:bg-red-600 !cursor-default no-drag"
+              title="閉じる"
+              className="size-[18px] rounded-full !cursor-default no-drag p-0 border border-[#c0392b]/60"
+              style={{ background: 'linear-gradient(145deg, #f44336, #c0392b)' }}
               onClick={() => closeApp(appId)}
             >
-              <X className="size-4 text-white" />
+              <X className="size-2.5 text-white/80" />
             </Button>
           </div>
         </CardHeader>

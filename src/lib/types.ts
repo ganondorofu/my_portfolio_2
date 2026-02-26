@@ -54,7 +54,8 @@ export interface App {
   id: AppID;
   title: string;
   icon: keyof typeof import('lucide-react');
-  iconColor?: string;
+  /** Ubuntu Yaru スタイルのグラデーション色 [明色, 暗色] */
+  iconBg?: [string, string];
   content?: ReactNode;
   externalUrl?: string;
 }
